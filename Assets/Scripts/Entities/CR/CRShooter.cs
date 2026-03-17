@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CRShooter : MonoBehaviour
 {
-    [SerializeField] protected GameObject bulletPool;
+    [SerializeField] protected BulletPool bulletPool;
     [SerializeField] protected SpriteRenderer weaponGraphic;
     [SerializeField] protected Bullet testBulletPrefab_T;
     protected bool isShootable;
