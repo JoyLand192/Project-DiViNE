@@ -29,11 +29,30 @@ public class Bullet : MonoBehaviour
         get => isMoving;
         set => isMoving = value;
     }
-    void Awake()
+    protected Bullet key;
+    public Bullet Key
+    {
+        get => key;
+        set => key = value;
+    }
+    public event System.Action OnBulletDeath;
+    public void Reset()
+    {
+        rb.isKinematic = false;
+        OnBulletDeath = null;
+    }
+    void Awake() 
     {
         rb = GetComponent<Rigidbody2D>();
     }
-    public async void Launch(Vector2? startPos = null, Vector2? directionVector = null, float? speed = null, float lifeTime = 0.5f)
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.collider.CompareTag("Enemy")) return;
+
+        rb.isKinematic = true;
+        rb.velocity = Vector2.zero;
+    }
+    public async void Launch(Vector2? startPos = null, Vector2? directionVector = null, float? speed = null, float? lifeTime = null)
     {
         if (startPos != null) transform.position = startPos.Value;
         if (directionVector != null) CurrentDirection = directionVector.Value;
@@ -42,8 +61,10 @@ public class Bullet : MonoBehaviour
         IsMoving = true;
         rb.velocity = CurrentDirection * MoveSpeed;
 
-        await UniTask.Delay(System.TimeSpan.FromSeconds(lifeTime));
+        if (lifeTime == null) return;
 
-        gameObject.SetActive(false);
+        await UniTask.Delay(System.TimeSpan.FromSeconds(lifeTime.Value));
+
+        OnBulletDeath?.Invoke();
     }
 }

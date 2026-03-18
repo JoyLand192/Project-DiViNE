@@ -4,8 +4,23 @@ using UnityEngine;
 
 public class BulletPool : MonoBehaviour
 {
-    public GameObject GetNewBullet(Bullet prefab, Vector2? position = null)
+    Dictionary<Bullet, Queue<Bullet>> bulletPools = new();
+    public Bullet GetBullet(Bullet prefab)
     {
-        
+        if (!bulletPools.ContainsKey(prefab)) bulletPools.Add(prefab, new Queue<Bullet>());
+        var bullet = bulletPools[prefab].Count > 0 ? bulletPools[prefab].Dequeue() : Instantiate(prefab, transform);
+        bullet.gameObject.SetActive(true);
+        bullet.Key = prefab;
+
+        return bullet;
+    }
+    public void Return(Bullet bullet)
+    {
+        if (bullet == null || bullet.Key == null) return;
+        if (!bulletPools.ContainsKey(bullet.Key)) bulletPools.Add(bullet.Key, new Queue<Bullet>());
+
+        bullet.Reset();
+        bullet.gameObject.SetActive(false);
+        bulletPools[bullet.Key].Enqueue(bullet);
     }
 }
