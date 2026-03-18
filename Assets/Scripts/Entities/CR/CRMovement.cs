@@ -9,15 +9,11 @@ public class CRMovement : EntityMovement
     {
         rb = GetComponent<Rigidbody2D>();
     }
-    void FixedUpdate()
-    {
-        Move();
-    }
-    void Move()
+    public void Move(float moveSpeed)
     {
         if (!IsMovable) return;
 
         var moveVector = new Vector3(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-        rb.MovePosition(transform.position + (moveVector * MoveSpeed * Time.fixedDeltaTime));
+        rb.MovePosition(transform.position + (moveVector * moveSpeed * Time.fixedDeltaTime));
     }
 }

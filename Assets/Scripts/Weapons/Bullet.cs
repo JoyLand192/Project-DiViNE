@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 public class Bullet : MonoBehaviour
@@ -35,7 +36,17 @@ public class Bullet : MonoBehaviour
         get => key;
         set => key = value;
     }
+    protected float currentDamage;
+    public float CurrentDamage
+    {
+        get => currentDamage;
+        set
+        {
+            currentDamage = Mathf.Max(value, 0);
+        }
+    }
     public event System.Action OnBulletDeath;
+    protected CancellationTokenSource cts = new();
     public void Reset()
     {
         rb.isKinematic = false;
@@ -45,12 +56,22 @@ public class Bullet : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
     }
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        if (collision.collider.CompareTag("Enemy")) return;
+        if (other.TryGetComponent<Enemy>(out var target))
+        {
+            target.Status.TakeDamage(1);
+        }
 
         rb.isKinematic = true;
         rb.velocity = Vector2.zero;
+
+        // 파티클 또는 타격 연출
+
+        cts.Cancel();
+        cts.Dispose();
+        cts = new();
+        OnBulletDeath?.Invoke();
     }
     public async void Launch(Vector2? startPos = null, Vector2? directionVector = null, float? speed = null, float? lifeTime = null)
     {
@@ -63,7 +84,7 @@ public class Bullet : MonoBehaviour
 
         if (lifeTime == null) return;
 
-        await UniTask.Delay(System.TimeSpan.FromSeconds(lifeTime.Value));
+        await UniTask.Delay(delayTimeSpan: System.TimeSpan.FromSeconds(lifeTime.Value), cancellationToken: cts.Token).SuppressCancellationThrow();
 
         OnBulletDeath?.Invoke();
     }

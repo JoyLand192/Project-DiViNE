@@ -11,9 +11,13 @@ public class CR : Entity
     [SerializeField] protected SpriteRenderer graphic;
     public override SpriteRenderer Graphic => graphic;
 
-    void Awake()
+    protected virtual void Awake()
     {
         movement = GetComponent<CRMovement>();
         status = GetComponent<CRStatus>();
+    }
+    protected virtual void FixedUpdate()
+    {
+        movement.Move(status.MoveSpeed);
     }
 }
