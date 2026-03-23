@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,6 +9,7 @@ public class CRShooter : MonoBehaviour
     [SerializeField] protected SpriteRenderer weaponGraphic;
     [SerializeField] protected Bullet testBulletPrefab_T;
     [SerializeField] protected ParticleSystem testBulletEffect;
+    [SerializeField] protected DamageTextPool damageTextPool;
     [SerializeField] protected float weaponMinDistance = 0.5f;
     [SerializeField] protected float weaponMaxDistance = 6;
     [SerializeField] protected float weaponDistanceScale = 0.18f;
@@ -20,6 +22,7 @@ public class CRShooter : MonoBehaviour
         set => isShootable = value;
     }
     protected Camera cam;
+    public event System.Action<Enemy> OnEnemyHit;
     void Awake()
     {
         cam = GetComponent<Camera>();
@@ -57,7 +60,29 @@ public class CRShooter : MonoBehaviour
         var direction = (Vector2)(Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position);
         var normalizedDirection = direction.normalized;
         var startPos = weaponGraphic == null ? transform.position : weaponGraphic.transform.position;
+        var damage = Random.Range(1, 100);
 
+        bullet.OnBulletHit += (target) =>
+        {
+            if (target is Enemy)
+            {
+                var enemy = target as Enemy;
+
+                Debug.Log($"데미지 발생! {Time.frameCount}");
+
+                if (damageTextPool != null)
+                {
+                    var dt = damageTextPool.Get();
+
+                    dt.SetText(damage);
+                    dt.gameObject.SetActive(true);
+                    dt.Jump(enemy.transform.position, damageTextPool).Forget();
+                }
+
+                enemy.Status.TakeDamage(damage);
+                OnEnemyHit?.Invoke(enemy);
+            }
+        };
         bullet.OnBulletDeath += () =>
         {
             Destroy(Instantiate(testBulletEffect, bullet.transform.position, Quaternion.identity).gameObject, 1f);

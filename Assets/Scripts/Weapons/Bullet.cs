@@ -36,20 +36,13 @@ public class Bullet : MonoBehaviour
         get => key;
         set => key = value;
     }
-    protected float currentDamage;
-    public float CurrentDamage
-    {
-        get => currentDamage;
-        set
-        {
-            currentDamage = Mathf.Max(value, 0);
-        }
-    }
     public event System.Action OnBulletDeath;
+    public event System.Action<Entity> OnBulletHit;
     protected CancellationTokenSource cts = new();
     public void Reset()
     {
         rb.isKinematic = false;
+        OnBulletHit = null;
         OnBulletDeath = null;
     }
     void Awake() 
@@ -58,9 +51,11 @@ public class Bullet : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.TryGetComponent<Enemy>(out var target))
+        if (other.TryGetComponent<Entity>(out var target))
         {
-            target.Status.TakeDamage(1);
+            var handler = OnBulletHit;
+            OnBulletHit = null;
+            handler?.Invoke(target);
         }
 
         rb.isKinematic = true;
