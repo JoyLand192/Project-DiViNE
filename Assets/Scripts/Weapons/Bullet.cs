@@ -37,7 +37,7 @@ public class Bullet : MonoBehaviour
         set => key = value;
     }
     public event System.Action OnBulletDeath;
-    public event System.Action<Entity> OnBulletHit;
+    public event System.Action<Collider2D> OnBulletHit;
     protected CancellationTokenSource cts = new();
     public void Reset()
     {
@@ -45,18 +45,15 @@ public class Bullet : MonoBehaviour
         OnBulletHit = null;
         OnBulletDeath = null;
     }
-    void Awake() 
+    void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
     }
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.TryGetComponent<Entity>(out var target))
-        {
-            var handler = OnBulletHit;
-            OnBulletHit = null;
-            handler?.Invoke(target);
-        }
+        var handler = OnBulletHit;
+        OnBulletHit = null;
+        handler?.Invoke(other);
 
         rb.isKinematic = true;
         rb.velocity = Vector2.zero;
@@ -66,7 +63,6 @@ public class Bullet : MonoBehaviour
         cts.Cancel();
         cts.Dispose();
         cts = new();
-        OnBulletDeath?.Invoke();
     }
     public async void Launch(Vector2? startPos = null, Vector2? directionVector = null, float? speed = null, float? lifeTime = null)
     {

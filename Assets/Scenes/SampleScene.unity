@@ -181,7 +181,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: -1
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.33962262, g: 0.11374155, b: 0.23923098, a: 1}
+  m_Color: {r: 0.26495883, g: 0.24523854, b: 0.31132078, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -415,7 +415,7 @@ MonoBehaviour:
   m_Intensity: 1
   m_LightVolumeIntensity: 1
   m_LightVolumeIntensityEnabled: 0
-  m_ApplyToSortingLayers: 00000000
+  m_ApplyToSortingLayers: 00000000eff6b1ce
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: 0
@@ -682,7 +682,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.6084906, b: 0.7054791, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -760,7 +760,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 890119308}
-  m_BodyType: 0
+  m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -1257,12 +1257,13 @@ MonoBehaviour:
   bulletPool: {fileID: 881314983}
   weaponGraphic: {fileID: 1791413287}
   testBulletPrefab_T: {fileID: 2931786470903500585, guid: ec7608aee42edeb4eaf689f0740c53c1, type: 3}
-  testBulletEffect: {fileID: 2478795949983013981, guid: 0d37d77548cb55d46b40d36940b2598b, type: 3}
+  bulletDestroyEffect: {fileID: 2478795949983013981, guid: 0d37d77548cb55d46b40d36940b2598b, type: 3}
+  bloodEffect: {fileID: 1316754454937543335, guid: 07cd6f3e06b323842a5a433133532653, type: 3}
   damageTextPool: {fileID: 1554557756}
   weaponMinDistance: 0.5
   weaponMaxDistance: 6
   weaponDistanceScale: 0.18
-  shootCooldown: 0.25
+  shootCooldown: 0.05
   timer: 0
 --- !u!1 &1554557755
 GameObject:

@@ -41,6 +41,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Effect
+    uniqueID: 3467769583
+    locked: 0
   - name: DamageText
     uniqueID: 3113495317
     locked: 0
