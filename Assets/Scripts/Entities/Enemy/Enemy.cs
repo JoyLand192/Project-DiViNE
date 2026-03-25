@@ -14,5 +14,7 @@ public class Enemy : Entity
     {
         movement = GetComponent<EnemyMovement>();
         status = GetComponent<EnemyStatus>();
+
+        status.OnMoveSpeedChanged += movement.ChangeSpeed;
     }
 }

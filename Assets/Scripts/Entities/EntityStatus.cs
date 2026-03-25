@@ -5,7 +5,7 @@ using UnityEngine;
 public abstract class EntityStatus : MonoBehaviour
 {
     [SerializeField] protected float moveSpeed;
-    public float MoveSpeed
+    public virtual float MoveSpeed
     {
         get => moveSpeed;
         set => moveSpeed = value;

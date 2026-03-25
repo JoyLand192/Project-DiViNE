@@ -5,7 +5,7 @@ using UnityEngine;
 public abstract class EntityMovement : MonoBehaviour
 {
     [SerializeField] protected bool isMovable;
-    public bool IsMovable
+    public virtual bool IsMovable
     {
         get => isMovable;
         set => isMovable = value;

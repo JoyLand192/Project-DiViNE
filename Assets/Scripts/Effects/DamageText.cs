@@ -14,6 +14,7 @@ public class DamageText : MonoBehaviour
         set => tmp = value;
     }
     [SerializeField] float jumpPower;
+    [SerializeField] float jumpHeight;
     [SerializeField] float duration;
     Rigidbody2D rb;
     void Awake()
@@ -27,9 +28,9 @@ public class DamageText : MonoBehaviour
         transform.position = pos;
 
         rb.velocity = Vector3.zero;
-        rb.AddForce(new Vector2(Random.Range(-1f, 1f), Random.Range(0.4f, 1.4f)).normalized * jumpPower, ForceMode2D.Impulse);
+        rb.AddForce(new Vector2(Random.Range(-1f, 1f), Random.Range(0.5f, 1f)).normalized * jumpPower + Vector2.up * jumpHeight, ForceMode2D.Impulse);
 
-        transform.DOScale(0, duration).SetEase(Ease.InCubic);
+        DOTween.Sequence().AppendInterval(duration / 2f).Append(transform.DOScale(0, duration / 2f).SetEase(Ease.InCubic));
         await UniTask.Delay(System.TimeSpan.FromSeconds(duration));
 
         if (pool == null)
