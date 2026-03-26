@@ -10,13 +10,25 @@ public abstract class EntityStatus : MonoBehaviour
         get => moveSpeed;
         set => moveSpeed = value;
     }
+    [SerializeField] protected float maxHP;
+    public float MaxHP
+    {
+        get => maxHP; 
+        set => maxHP = value;
+    }
     [SerializeField] protected float hp;
     public float HP
     {
         get => hp; 
         set
         {
-            hp = Mathf.Max(0, value);
+            if (value > maxHP)
+            {
+                // 초과량 보호막으로 전환 등
+            }
+
+            hp = Mathf.Clamp(value, 0, maxHP);
+            if (value <= 0) Destroy(gameObject);
         }
     }
     public void TakeDamage(float damage)

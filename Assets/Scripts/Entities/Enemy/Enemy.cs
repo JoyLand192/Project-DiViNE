@@ -16,5 +16,11 @@ public class Enemy : Entity
         status = GetComponent<EnemyStatus>();
 
         status.OnMoveSpeedChanged += movement.ChangeSpeed;
+
+        Init();
+    }
+    protected virtual void Init()
+    {
+        status.HP = status.MaxHP;
     }
 }

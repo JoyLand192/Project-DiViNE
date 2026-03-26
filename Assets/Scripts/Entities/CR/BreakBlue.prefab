@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7081846206584699126}
   - component: {fileID: 8521457649215687811}
   - component: {fileID: 774118640935013220}
+  - component: {fileID: -5576156949979058993}
   m_Layer: 0
   m_Name: BreakBlue
   m_TagString: Untagged
@@ -48,9 +49,9 @@ ParticleSystem:
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 1
-  looping: 0
+  looping: 1
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
@@ -169,8 +170,8 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 22
-      minScalar: 6
+      scalar: 34
+      minScalar: 12
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -287,7 +288,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.06
+      scalar: 0.02
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -664,8 +665,8 @@ ParticleSystem:
   ShapeModule:
     serializedVersion: 6
     enabled: 1
-    type: 0
-    angle: 25
+    type: 4
+    angle: 56.9
     length: 5
     boxThickness: {x: 0, y: 0, z: 0}
     radiusThickness: 1
@@ -751,7 +752,7 @@ ParticleSystem:
     sphericalDirectionAmount: 0
     randomPositionAmount: 0
     radius:
-      value: 1
+      value: 0.6
       mode: 0
       spread: 0
       speed:
@@ -980,7 +981,7 @@ ParticleSystem:
       countCurve:
         serializedVersion: 2
         minMaxState: 3
-        scalar: 8
+        scalar: 9
         minScalar: 6
         maxCurve:
           serializedVersion: 2
@@ -4889,7 +4890,7 @@ ParticleSystemRenderer:
   m_MinParticleSize: 0
   m_MaxParticleSize: 0.5
   m_CameraVelocityScale: 0
-  m_VelocityScale: 0.03
+  m_VelocityScale: 0.02
   m_LengthScale: 1
   m_SortingFudge: 0
   m_NormalDirection: 1
@@ -4915,3 +4916,16 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &-5576156949979058993
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2358739942756498875}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd9bb743f596bbf479238ef629b9feb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  part: {fileID: 8521457649215687811}

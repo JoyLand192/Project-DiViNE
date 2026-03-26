@@ -37,7 +37,7 @@ public class Bullet : MonoBehaviour
         set => key = value;
     }
     public event System.Action OnBulletDeath;
-    public event System.Action<Collider2D> OnBulletHit;
+    public event System.Action<Vector2, Collider2D> OnBulletHit;
     protected CancellationTokenSource cts = new();
     public void Reset()
     {
@@ -53,7 +53,7 @@ public class Bullet : MonoBehaviour
     {
         var handler = OnBulletHit;
         OnBulletHit = null;
-        handler?.Invoke(other);
+        handler?.Invoke(CurrentDirection, other);
 
         rb.isKinematic = true;
         rb.velocity = Vector2.zero;
