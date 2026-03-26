@@ -13,9 +13,22 @@ public class DamageText : MonoBehaviour
         get => tmp;
         set => tmp = value;
     }
+    [SerializeField] Material normalMaterial;
+    [SerializeField] Material criticalMaterial;
     [SerializeField] float jumpPower;
     [SerializeField] float jumpHeight;
     [SerializeField] float duration;
+    bool isCritical;
+    public bool IsCritical
+    {
+        get => isCritical;
+        set
+        {
+            isCritical = value;
+            TMP.fontMaterial = value ? criticalMaterial : normalMaterial;
+            TMP.fontSize = value ? 10 : 7;
+        }
+    }
     Rigidbody2D rb;
     void Awake()
     {

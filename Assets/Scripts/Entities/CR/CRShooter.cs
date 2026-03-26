@@ -92,8 +92,11 @@ public class CRShooter : MonoBehaviour
                 {
                     var dt = damageTextPool.Get();
 
+                    //DEBUG
+                    dt.IsCritical = damage >= 1000;
+
                     dt.SetText(damage);
-                    dt.SetSize(1 + (Mathf.Clamp(damage, 50, 500) - 50) / 450f * 1f);
+                    dt.SetSize(1f + Mathf.InverseLerp(5, 500, damage) * 1.5f + Mathf.InverseLerp(500, 5000, damage) * 0.5f);
                     dt.gameObject.SetActive(true);
                     dt.Jump(enemy.transform.position, damageTextPool).Forget();
                 }

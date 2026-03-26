@@ -23,4 +23,5 @@ public class Enemy : Entity
     {
         status.HP = status.MaxHP;
     }
+    public virtual void SetTarget(GameObject target) => movement.DebugTarget = target;
 }

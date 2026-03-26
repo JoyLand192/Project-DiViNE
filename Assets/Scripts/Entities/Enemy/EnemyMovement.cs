@@ -6,7 +6,7 @@ using UnityEngine.Rendering;
 
 public class EnemyMovement : EntityMovement
 {
-    [SerializeField] GameObject DebugTarget;
+    public GameObject DebugTarget { get; set; }
     [SerializeField] float range;
     public float Range
     {

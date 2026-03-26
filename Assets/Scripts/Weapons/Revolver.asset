@@ -16,6 +16,6 @@ MonoBehaviour:
   BulletSprite: {fileID: 21300000, guid: fdd546285d0ec594b9fa4c395bd7225a, type: 3}
   BreakEffect: {fileID: 2478795949983013981, guid: 0d37d77548cb55d46b40d36940b2598b, type: 3}
   HitEffect: {fileID: 9060839745284300777, guid: 4cfa8e1e0383c1e42a2f6b29e8c18455, type: 3}
-  ShotCooldown: 0.2
-  BulletSpeed: 66
-  BaseDamage: 555
+  ShotCooldown: 0.3
+  BulletSpeed: 50
+  BaseDamage: 811
