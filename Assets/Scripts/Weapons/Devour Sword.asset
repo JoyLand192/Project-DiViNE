@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f59514a10d534b4eab6d335a4c77eba, type: 3}
+  m_Name: Devour Sword
+  m_EditorClassIdentifier: 
+  Sprite: {fileID: 21300000, guid: 18ee3a0948ffb954c870d8ea28d723b9, type: 3}
+  BreakEffect: {fileID: 2478795949983013981, guid: 0d37d77548cb55d46b40d36940b2598b, type: 3}
+  HitEffect: {fileID: 1063000501744738628, guid: 1d97e79b7e40ebd40b643f2b95183504, type: 3}
+  AttackCooldown: 0.5
+  BaseDamage: 15
+  SlashEffect: {fileID: 8507706197217528904, guid: 754883b5b7c2f464ca7cee8348b96684, type: 3}
+  rangePoint1: {x: 7.5, y: 3, z: 0}
+  rangePoint2: {x: -5.5, y: -2, z: 0}

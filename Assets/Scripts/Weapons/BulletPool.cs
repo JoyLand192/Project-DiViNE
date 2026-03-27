@@ -6,12 +6,16 @@ using Cysharp.Threading.Tasks;
 public class BulletPool : MonoBehaviour
 {
     Dictionary<Bullet, Queue<Bullet>> bulletPools = new();
-    public Bullet GetBullet(Bullet prefab)
+    public Bullet GetBullet(Bullet prefab, CRShooter shooter, float damage)
     {
         if (!bulletPools.ContainsKey(prefab)) bulletPools.Add(prefab, new Queue<Bullet>());
+
         var bullet = bulletPools[prefab].Count > 0 ? bulletPools[prefab].Dequeue() : Instantiate(prefab, transform);
         bullet.gameObject.SetActive(true);
+        bullet.Hitable = true;
         bullet.Key = prefab;
+        bullet.Damage = damage;
+        bullet.Shooter = shooter;
 
         return bullet;
     }

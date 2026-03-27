@@ -18,32 +18,16 @@ public class Bullet : MonoBehaviour
             transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(value.y, value.x) * Mathf.Rad2Deg);
         }
     }
-    [SerializeField] protected float moveSpeed;
-    public float MoveSpeed
-    {
-        get => moveSpeed;
-        set => moveSpeed = value;
-    }
-    [SerializeField] protected bool isMoving;
-    public bool IsMoving
-    {
-        get => isMoving;
-        set => isMoving = value;
-    }
-    protected Bullet key;
-    public Bullet Key
-    {
-        get => key;
-        set => key = value;
-    }
-    public event System.Action OnBulletDeath;
-    public event System.Action<Vector2, Collider2D> OnBulletHit;
+    public float MoveSpeed { get; set; }
+    public bool IsMoving { get; set; }
+    public Bullet Key { get; set; }
+    public CRShooter Shooter { get; set; }
+    public float Damage { get; set; }
+    public bool Hitable { get; set; }
     protected CancellationTokenSource cts = new();
     public void Reset()
     {
         rb.isKinematic = false;
-        OnBulletHit = null;
-        OnBulletDeath = null;
     }
     void Awake()
     {
@@ -51,9 +35,10 @@ public class Bullet : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D other)
     {
-        var handler = OnBulletHit;
-        OnBulletHit = null;
-        handler?.Invoke(CurrentDirection, other);
+        if (!Hitable) return;
+
+        Hitable = false;
+        Shooter.OnBulletHit(this, CurrentDirection, other, Damage);
 
         rb.isKinematic = true;
         rb.velocity = Vector2.zero;
@@ -77,6 +62,6 @@ public class Bullet : MonoBehaviour
 
         await UniTask.Delay(delayTimeSpan: System.TimeSpan.FromSeconds(lifeTime.Value), cancellationToken: cts.Token).SuppressCancellationThrow();
 
-        OnBulletDeath?.Invoke();
+        Shooter.OnBulletBreak(this);
     }
 }

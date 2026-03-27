@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8862111956318292698}
   - component: {fileID: 3878612992464637891}
   m_Layer: 0
-  m_Name: Break
+  m_Name: WallBreak
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -34,7 +34,7 @@ public class DamageText : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
     }
-    public void SetText(float damage) { if (TMP != null) TMP.text = $"{damage}"; }
+    public void SetText(float damage) { if (TMP != null) TMP.text = $"{damage:00}"; }
     public void SetSize(float size) => transform.localScale = Vector3.one * size;
     public async UniTask Jump(Vector3 pos, DamageTextPool pool)
     {
