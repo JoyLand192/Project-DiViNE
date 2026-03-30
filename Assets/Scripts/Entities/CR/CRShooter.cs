@@ -26,6 +26,8 @@ public struct AttackInfo
 }
 public class CRShooter : MonoBehaviour
 {
+    [SerializeField] protected List<KeyCode> changingKeys = new();
+    [SerializeField] protected WeaponDisplayer display;
     [SerializeField] protected BulletPool bulletPool;
     [SerializeField] protected SpriteRenderer weaponGraphic;
     [SerializeField] protected DamageTextPool damageTextPool;
@@ -34,6 +36,7 @@ public class CRShooter : MonoBehaviour
     [SerializeField] protected float weaponMaxDistance = 6;
     [SerializeField] protected float weaponDistanceScale = 0.18f;
     [SerializeField] protected float timer = 0;
+    protected Queue<Weapon> weaponQueue = new();
     public Weapon CurrentWeapon
     {
         get => currentWeapon;
@@ -57,6 +60,14 @@ public class CRShooter : MonoBehaviour
     }
     protected void Update()
     {
+        foreach (var key in changingKeys)
+        {
+            if (Input.GetKeyDown(key))
+            {
+                NextWeapon(CurrentWeapon, weaponQueue.Dequeue());
+                break;
+            }
+        }
         Cooldown();
         if (weaponGraphic != null) WeaponPos();
     }
@@ -68,12 +79,6 @@ public class CRShooter : MonoBehaviour
             Shoot();
             timer += CurrentWeapon.AttackCooldown;
         }
-    }
-    public void DelayedAction(float delay, System.Action action) => StartCoroutine(DelayedActionCoroutine(delay, action));
-    public IEnumerator DelayedActionCoroutine(float delay, System.Action action)
-    {
-        yield return new WaitForSeconds(delay);
-        action?.Invoke();
     }
     protected void WeaponPos()
     {
@@ -96,6 +101,21 @@ public class CRShooter : MonoBehaviour
         weaponGraphic.transform.rotation = Quaternion.Euler(0, 0, angle);
 
         weaponGraphic.transform.position = transform.position + (Vector3)fixedWeaponPos;
+    }
+    public void DelayedAction(float delay, System.Action action) => StartCoroutine(DelayedActionCoroutine(delay, action));
+    public IEnumerator DelayedActionCoroutine(float delay, System.Action action)
+    {
+        yield return new WaitForSeconds(delay);
+        action?.Invoke();
+    }
+    public void NextWeapon(Weapon before, Weapon after)
+    {
+        weaponQueue.Enqueue(before);
+        CurrentWeapon = after;
+    }
+    public void NewWeapon(Weapon after)
+    {
+
     }
     public void OnMeleeHit(Collider2D[] hitEntities, AttackInfo info, ParticleSystem part)
     {

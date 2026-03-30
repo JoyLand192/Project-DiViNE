@@ -10,6 +10,8 @@ public class CR : Entity
     public override EntityStatus Status => status;
     protected CRShooter shooter;
     public CRShooter Shooter => shooter;
+    protected CREquipment equipment;
+    public CREquipment Equipment => equipment;
     [SerializeField] protected SpriteRenderer graphic;
     public override SpriteRenderer Graphic => graphic;
 
@@ -18,6 +20,7 @@ public class CR : Entity
         movement = GetComponent<CRMovement>();
         status = GetComponent<CRStatus>();
         shooter = GetComponent<CRShooter>();
+        equipment = GetComponent<CREquipment>();
 
         shooter.DamageCalcRequest = status.CalcFinalDamage;
     }
