@@ -26,25 +26,29 @@ public struct AttackInfo
 }
 public class CRShooter : MonoBehaviour
 {
-    [SerializeField] protected List<KeyCode> changingKeys = new();
+    [SerializeField] protected Weapon[] weapons = new Weapon[3];
     [SerializeField] protected WeaponDisplayer display;
     [SerializeField] protected BulletPool bulletPool;
     [SerializeField] protected SpriteRenderer weaponGraphic;
     [SerializeField] protected DamageTextPool damageTextPool;
     [SerializeField] protected Weapon currentWeapon;
+    [SerializeField] protected int currentWeaponIndex = 1;
     [SerializeField] protected float weaponMinDistance = 0.5f;
     [SerializeField] protected float weaponMaxDistance = 6;
     [SerializeField] protected float weaponDistanceScale = 0.18f;
     [SerializeField] protected float timer = 0;
-    protected Queue<Weapon> weaponQueue = new();
     public Weapon CurrentWeapon
     {
         get => currentWeapon;
         set
         {
             currentWeapon = value;
-            if (value == null) return;
-
+            if (value == null)
+            {
+                weaponGraphic.gameObject.SetActive(false);
+                return;
+            }
+            weaponGraphic.gameObject.SetActive(true);
             weaponGraphic.sprite = currentWeapon.Sprite;
         }
     }
@@ -60,14 +64,11 @@ public class CRShooter : MonoBehaviour
     }
     protected void Update()
     {
-        foreach (var key in changingKeys)
-        {
-            if (Input.GetKeyDown(key))
-            {
-                NextWeapon(CurrentWeapon, weaponQueue.Dequeue());
-                break;
-            }
-        }
+        if (Input.GetKeyDown(KeyCode.Alpha1)) ChangeWeapon(0);
+        else if (Input.GetKeyDown(KeyCode.Alpha2)) ChangeWeapon(1);
+        else if (Input.GetKeyDown(KeyCode.Alpha3)) ChangeWeapon(2);
+        else if (Input.GetKeyDown(KeyCode.Space)) NextWeapon();
+
         Cooldown();
         if (weaponGraphic != null) WeaponPos();
     }
@@ -102,20 +103,19 @@ public class CRShooter : MonoBehaviour
 
         weaponGraphic.transform.position = transform.position + (Vector3)fixedWeaponPos;
     }
+    public void NextWeapon() => ChangeWeapon(++currentWeaponIndex % 3);
+    public void ChangeWeapon(int index)
+    {
+        currentWeaponIndex = index;
+
+        CurrentWeapon = weapons[index];
+        display.SetCurrentSlot(index);
+    }
     public void DelayedAction(float delay, System.Action action) => StartCoroutine(DelayedActionCoroutine(delay, action));
     public IEnumerator DelayedActionCoroutine(float delay, System.Action action)
     {
         yield return new WaitForSeconds(delay);
         action?.Invoke();
-    }
-    public void NextWeapon(Weapon before, Weapon after)
-    {
-        weaponQueue.Enqueue(before);
-        CurrentWeapon = after;
-    }
-    public void NewWeapon(Weapon after)
-    {
-
     }
     public void OnMeleeHit(Collider2D[] hitEntities, AttackInfo info, ParticleSystem part)
     {

@@ -215,8 +215,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 10
-  maxHP: 1000
-  hp: 50
+  maxHP: 20
+  hp: 0
 --- !u!195 &988151457669156368
 NavMeshAgent:
   m_ObjectHideFlags: 0

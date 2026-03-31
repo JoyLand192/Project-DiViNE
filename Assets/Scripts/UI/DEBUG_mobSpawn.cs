@@ -6,5 +6,8 @@ public class DEBUG_mobSpawn : MonoBehaviour
 {
     [SerializeField] Enemy enemyPrefab;
     [SerializeField] GameObject cr;
-    public void Spawn() => Instantiate(enemyPrefab).SetTarget(cr);
+    public void Spawn()
+    {
+        for (int i = 0; i < 10; i++) Instantiate(enemyPrefab).SetTarget(cr);
+    }
 }

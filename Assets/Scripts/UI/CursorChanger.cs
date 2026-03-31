@@ -22,7 +22,7 @@ public class CursorChanger : MonoBehaviour
             return;
         }
 
-        var fixedCursor = new Texture2D(cursor.width, cursor.height);
+        var fixedCursor = new Texture2D(cursor.width, cursor.height, TextureFormat.RGBA32, false);
 
         for (int y = 0; y < cursor.height; y++)
         {

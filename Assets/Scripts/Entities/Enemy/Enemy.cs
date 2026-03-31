@@ -7,9 +7,9 @@ public class Enemy : Entity
     [SerializeField] protected SpriteRenderer graphic;
     public override SpriteRenderer Graphic => graphic;
     protected EnemyMovement movement;
-    public override EntityMovement Movement => movement;
+    public EnemyMovement Movement => movement;
     protected EnemyStatus status;
-    public override EntityStatus Status => status;
+    public EnemyStatus Status => status;
     protected virtual void Awake()
     {
         movement = GetComponent<EnemyMovement>();

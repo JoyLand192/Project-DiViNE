@@ -14,6 +14,7 @@ public class DamageText : MonoBehaviour
         set => tmp = value;
     }
     [SerializeField] Material normalMaterial;
+    [SerializeField] Material crMaterial;
     [SerializeField] Material criticalMaterial;
     [SerializeField] float jumpPower;
     [SerializeField] float jumpHeight;
@@ -25,16 +26,17 @@ public class DamageText : MonoBehaviour
         set
         {
             isCritical = value;
-            TMP.fontMaterial = value ? criticalMaterial : normalMaterial;
+            TMP.fontMaterial = value ? criticalMaterial : IsTargetCR ? crMaterial : normalMaterial;
             TMP.fontSize = value ? 10 : 7;
         }
     }
+    public bool IsTargetCR { get; set; }
     Rigidbody2D rb;
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
     }
-    public void SetText(float damage) { if (TMP != null) TMP.text = $"{damage:00}"; }
+    public void SetText(float damage) { if (TMP != null) TMP.text = $"{damage:0}"; }
     public void SetSize(float size) => transform.localScale = Vector3.one * size;
     public async UniTask Jump(Vector3 pos, DamageTextPool pool)
     {

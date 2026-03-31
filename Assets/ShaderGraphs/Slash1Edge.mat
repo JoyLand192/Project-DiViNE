@@ -52,7 +52,7 @@ Material:
     - _Use_Simple_Noise: 0
     m_Colors:
     - _WindDirection: {r: 0, g: 0, b: 0, a: 0}
-    - _WindScale: {r: 0.48, g: 0.81, b: 0, a: 0}
+    - _WindScale: {r: 0.52, g: 0.81, b: 0, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &847232420739426512
 MonoBehaviour:

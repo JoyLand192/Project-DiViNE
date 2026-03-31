@@ -5,9 +5,9 @@ using UnityEngine;
 public class CR : Entity
 {
     protected CRMovement movement;
-    public override EntityMovement Movement => movement;
+    public CRMovement Movement => movement;
     protected CRStatus status;
-    public override EntityStatus Status => status;
+    public CRStatus Status => status;
     protected CRShooter shooter;
     public CRShooter Shooter => shooter;
     protected CREquipment equipment;
@@ -22,7 +22,7 @@ public class CR : Entity
         shooter = GetComponent<CRShooter>();
         equipment = GetComponent<CREquipment>();
 
-        shooter.DamageCalcRequest = status.CalcFinalDamage;
+        shooter.DamageCalcRequest = (damageBase) => damageBase * status.Damage;
     }
     protected virtual void FixedUpdate()
     {

@@ -9,18 +9,21 @@ public abstract class EntityStatus : MonoBehaviour
     public virtual float MoveSpeed
     {
         get => moveSpeed;
-        set => moveSpeed = value;
+        set
+        {
+            moveSpeed = value;
+        }
     }
     [SerializeField] protected float maxHP;
-    public float MaxHP
+    public virtual float MaxHP
     {
-        get => maxHP; 
+        get => maxHP;
         set => maxHP = value;
     }
     [SerializeField] protected float hp;
-    public float HP
+    public virtual float HP
     {
-        get => hp; 
+        get => hp;
         set
         {
             if (value > maxHP)
@@ -29,18 +32,18 @@ public abstract class EntityStatus : MonoBehaviour
             }
 
             hp = Mathf.Clamp(value, 0, maxHP);
-            if (value <= 0) Destroy(gameObject);
         }
     }
-    public void TakeDamage(float damage, DamageTextPool dtPool)
+    public virtual void TakeDamage(float damage, DamageTextPool dtPool)
     {
         var dmg = Random.Range(0.8f, 1.4f) * damage;
 
-        if (dtPool == null) dtPool = FindAnyObjectByType<DamageTextPool>(); 
+        if (dtPool == null) dtPool = FindAnyObjectByType<DamageTextPool>();
 
         var dt = dtPool.Get();
 
         //DEBUG
+        dt.IsTargetCR = this is CRStatus;
         dt.IsCritical = dmg >= 1000;
 
         dt.SetText(dmg);
