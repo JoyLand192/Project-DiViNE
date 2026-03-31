@@ -130,28 +130,33 @@ public class CRShooter : MonoBehaviour
             }
         }
     }
-    public void OnBulletHit(Bullet bullet, Vector2 direction, Collider2D target, float damage)
+    public void OnBulletHit(Bullet bullet, Vector2 direction, Collider2D target, float damage, ParticleSystem hitEffect = null, ParticleSystem breakEffect = null)
     {
         if (target.TryGetComponent<Enemy>(out var enemy))
         {
             Debug.Log($"데미지 발생! {Time.frameCount}");
 
-            var eff = Instantiate(CurrentWeapon.HitEffect, enemy.transform.position, Quaternion.Euler(-90, 0, 0));
-            foreach (var dp in eff.GetComponentsInChildren<DirectionalParticle>()) dp.SetShapeAngle(new Vector3(0, -1 * (Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg + 90), 0));
-            foreach (var part in eff.GetComponentsInChildren<ParticleSystem>()) part.Play();
+            if (hitEffect != null)
+            {
+                var eff = Instantiate(hitEffect, enemy.transform.position, Quaternion.Euler(-90, 0, 0));
+                foreach (var dp in eff.GetComponentsInChildren<DirectionalParticle>()) dp.SetShapeAngle(new Vector3(0, -1 * (Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg + 90), 0));
+                foreach (var part in eff.GetComponentsInChildren<ParticleSystem>()) part.Play();
 
-            Destroy(eff.gameObject, CurrentWeapon.HitEffect.main.duration);
+                Destroy(eff.gameObject, hitEffect.main.duration);
+            }
 
             enemy.Status.TakeDamage(damage, damageTextPool);
             OnEnemyHit?.Invoke(enemy);
         }
         else
         {
-            var eff = Instantiate(CurrentWeapon.BreakEffect, bullet.transform.position, Quaternion.Euler(-90, 0, 0));
+            if (breakEffect == null) return;
+
+            var eff = Instantiate(breakEffect, bullet.transform.position, Quaternion.Euler(-90, 0, 0));
             foreach (var dp in eff.GetComponentsInChildren<DirectionalParticle>()) dp.SetShapeAngle(new Vector3(0, -1 * (Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg + 90), 0));
             foreach (var part in eff.GetComponentsInChildren<ParticleSystem>()) part.Play();
 
-            Destroy(eff.gameObject, CurrentWeapon.BreakEffect.main.duration);
+            Destroy(eff.gameObject, breakEffect.main.duration);
         }
     }
     public async void OnBulletBreak(Bullet bullet)

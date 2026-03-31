@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class EnemyShooter : MonoBehaviour
 {
+    [SerializeField] float damage;
     [SerializeField] DamageTextPool dtPool;
     float cd = 0.3f;
     float timer;
@@ -16,7 +17,7 @@ public class EnemyShooter : MonoBehaviour
         if (collision.gameObject.layer == LayerMask.NameToLayer("CR") && timer <= 0)
         {
             timer = cd;
-            collision.gameObject.GetComponent<CRStatus>().TakeDamage(5, dtPool);
+            collision.gameObject.GetComponent<CRStatus>().TakeDamage(damage, dtPool);
         }
     }
 }

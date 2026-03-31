@@ -13,6 +13,7 @@ public class HUDStatsManager : MonoBehaviour
     [SerializeField] CRStatus cr;
     RectTransform hpIconRect;
     RectTransform hpTextRect;
+    Color hpIconOriginColor;
     Vector3 hpIconOriginPos;
     void OnEnable()
     {
@@ -20,6 +21,8 @@ public class HUDStatsManager : MonoBehaviour
         hpTextRect = hpText.transform as RectTransform;
 
         hpIconOriginPos = hpIconRect.anchoredPosition;
+        hpIconOriginColor = hpIcon.color;
+
         cr.OnHPChanged += UpdateHP;
     }
     public void UpdateHP(float diff)
@@ -27,24 +30,24 @@ public class HUDStatsManager : MonoBehaviour
         hpText.text = $"{cr.HP:0}";
 
         //hpIcon.color = cr.HP / cr.MaxHP > hpWarnThreshold ? Color.white : Color.red;
-        var color = cr.HP / cr.MaxHP > hpWarnThreshold ? Color.white : Color.red;
+        var color = cr.HP / cr.MaxHP > hpWarnThreshold ? hpIconOriginColor : Color.red;
 
         if (diff < 0)
         {
-            float intensity = Mathf.InverseLerp(0, -50, diff) + Mathf.InverseLerp(-50, -500, diff);
+            float intensity = Mathf.InverseLerp(0, cr.MaxHP * -0.3f, diff) + Mathf.InverseLerp(cr.MaxHP * -0.3f, cr.MaxHP * -1f, diff);
 
-            hpIconRect.DOKill();
-            hpTextRect.DOKill();
-            hpIcon.DOKill();
-            hpText.DOKill();
+            hpIconRect.DOKill(true);
+            hpTextRect.DOKill(true);
+            hpIcon.DOKill(true);
+            hpText.DOKill(true);
 
             hpIcon.color = Color.red;
             hpIcon.DOColor(color, 0.4f);
             hpText.color = Color.red;
             hpText.DOColor(color, 0.4f);
 
-            hpIconRect.DOShakeAnchorPos(duration: 0.4f, strength: intensity * 75, vibrato: 20, fadeOut: true);
-            hpTextRect.DOShakeAnchorPos(duration: 0.4f, strength: intensity * 25, vibrato: 20, fadeOut: true);
+            hpIconRect.DOShakeAnchorPos(duration: 0.4f, strength: intensity * 15, vibrato: 20, fadeOut: true);
+            hpTextRect.DOShakeAnchorPos(duration: 0.4f, strength: intensity * 10, vibrato: 20, fadeOut: true);
         }
     }
 }

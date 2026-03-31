@@ -22,6 +22,8 @@ public class Bullet : MonoBehaviour
     public bool IsMoving { get; set; }
     public Bullet Key { get; set; }
     public CRShooter Shooter { get; set; }
+    public ParticleSystem HitEffect { get; set; }
+    public ParticleSystem BreakEffect { get; set; }
     public float Damage { get; set; }
     public bool Hitable { get; set; }
     protected CancellationTokenSource cts = new();
@@ -38,7 +40,7 @@ public class Bullet : MonoBehaviour
         if (!Hitable) return;
 
         Hitable = false;
-        Shooter.OnBulletHit(this, CurrentDirection, other, Damage);
+        Shooter.OnBulletHit(this, CurrentDirection, other, Damage, HitEffect, BreakEffect);
 
         rb.isKinematic = true;
         rb.velocity = Vector2.zero;
@@ -49,11 +51,14 @@ public class Bullet : MonoBehaviour
         cts.Dispose();
         cts = new();
     }
-    public async void Launch(Vector2? startPos = null, Vector2? directionVector = null, float? speed = null, float? lifeTime = null)
+    public async void Launch(Vector2? startPos = null, Vector2? directionVector = null, float? speed = null, float? lifeTime = null, ParticleSystem hitEffect = null, ParticleSystem breakEffect = null)
     {
         if (startPos != null) transform.position = startPos.Value;
         if (directionVector != null) CurrentDirection = directionVector.Value;
         if (speed != null) MoveSpeed = speed.Value;
+
+        HitEffect = hitEffect;
+        BreakEffect = breakEffect;
 
         IsMoving = true;
         rb.velocity = CurrentDirection * MoveSpeed;

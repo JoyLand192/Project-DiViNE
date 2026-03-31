@@ -202,6 +202,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 422bd0dcc63bc864496d3dae3422ff0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damage: 15
+  dtPool: {fileID: 0}
 --- !u!114 &6127256653094615664
 MonoBehaviour:
   m_ObjectHideFlags: 0

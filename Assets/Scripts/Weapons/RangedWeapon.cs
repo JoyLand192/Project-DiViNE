@@ -11,6 +11,6 @@ public class RangedWeapon : Weapon
     public override void Launch(AttackInfo info)
     {
         var bullet = info.Pool.GetBullet(bulletPrefab, info.Shooter, info.Damage);
-        bullet.Launch(info.Position, info.Direction, BulletSpeed, BulletLifetime);
+        bullet.Launch(info.Position, info.Direction, BulletSpeed, BulletLifetime, HitEffect, BreakEffect);
     }
 }
