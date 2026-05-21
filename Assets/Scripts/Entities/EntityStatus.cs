@@ -24,15 +24,25 @@ public abstract class EntityStatus : MonoBehaviour
     public virtual float HP
     {
         get => hp;
-        set
+        protected set
         {
             if (value > maxHP)
             {
                 // 초과량 보호막으로 전환 등
             }
-
             hp = Mathf.Clamp(value, 0, maxHP);
+            if (hp == 0) Death();
         }
+    }
+    public event System.Action OnDeath;
+    public virtual void Initialize()
+    {
+        HP = MaxHP;
+    }
+    public virtual void TakeHeal(float value)
+    {
+        var res = value;
+        if (value > 0) HP += value;
     }
     public virtual void TakeDamage(float damage, DamageTextPool dtPool)
     {
@@ -52,5 +62,9 @@ public abstract class EntityStatus : MonoBehaviour
         dt.Jump(transform.position, dtPool).Forget();
 
         HP -= dmg;
+    }
+    public void Death()
+    {
+        OnDeath?.Invoke();
     }
 }

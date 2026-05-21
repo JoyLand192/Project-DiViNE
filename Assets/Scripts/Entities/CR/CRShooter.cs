@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -56,6 +57,8 @@ public class CRShooter : MonoBehaviour
     public bool IsFlipped { get; set; }
     public bool IsSlashing { get; set; }
     protected Camera cam;
+    protected Vector3 weaponShakeOffset;
+    protected Tween weaponShakeTween;
     public System.Func<int, float> DamageCalcRequest;
     public event System.Action<Enemy> OnEnemyHit;
     void Awake()
@@ -101,7 +104,7 @@ public class CRShooter : MonoBehaviour
         angle -= angle > 90 || angle < -90 ? 180 : 0;
         weaponGraphic.transform.rotation = Quaternion.Euler(0, 0, angle);
 
-        weaponGraphic.transform.position = transform.position + (Vector3)fixedWeaponPos;
+        weaponGraphic.transform.position = transform.position + (Vector3)fixedWeaponPos + weaponShakeOffset;
     }
     public void NextWeapon() => ChangeWeapon(++currentWeaponIndex % 3);
     public void ChangeWeapon(int index)
@@ -110,6 +113,14 @@ public class CRShooter : MonoBehaviour
 
         CurrentWeapon = weapons[index];
         display.SetCurrentSlot(index);
+
+        weaponShakeTween.Kill(true);
+        weaponShakeTween = DOTween.Shake(
+            () => weaponShakeOffset,
+            (x) => weaponShakeOffset = x,
+            0.15f,
+            strength: 0.175f,
+            vibrato: 35);
     }
     public void DelayedAction(float delay, System.Action action) => StartCoroutine(DelayedActionCoroutine(delay, action));
     public IEnumerator DelayedActionCoroutine(float delay, System.Action action)

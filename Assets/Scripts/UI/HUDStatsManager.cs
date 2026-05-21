@@ -42,12 +42,29 @@ public class HUDStatsManager : MonoBehaviour
             hpText.DOKill(true);
 
             hpIcon.color = Color.red;
-            hpIcon.DOColor(color, 0.4f);
             hpText.color = Color.red;
+            hpIcon.DOColor(color, 0.4f);
             hpText.DOColor(color, 0.4f);
 
             hpIconRect.DOShakeAnchorPos(duration: 0.4f, strength: intensity * 15, vibrato: 20, fadeOut: true);
             hpTextRect.DOShakeAnchorPos(duration: 0.4f, strength: intensity * 10, vibrato: 20, fadeOut: true);
+        }
+        else if (diff > 0)
+        {
+            float intensity = Mathf.InverseLerp(0, cr.MaxHP * 0.3f, diff) + Mathf.InverseLerp(cr.MaxHP * -0.3f, cr.MaxHP * -1f, diff);
+
+            hpIconRect.DOKill(true);
+            hpTextRect.DOKill(true);
+            hpIcon.DOKill(true);
+            hpText.DOKill(true);
+
+            hpIcon.color = Color.green;
+            hpText.color = Color.green;
+            hpIcon.DOColor(color, 0.4f);
+            hpText.DOColor(color, 0.4f);
+
+            hpIconRect.DOShakeAnchorPos(duration: 0.4f, strength: intensity * 12, vibrato: 15, fadeOut: true);
+            hpTextRect.DOShakeAnchorPos(duration: 0.4f, strength: intensity * 8, vibrato: 15, fadeOut: true);
         }
     }
 }

@@ -175,6 +175,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d3467d086215cb438ee09d19bc1f2da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  testDeathParticle: {fileID: 7648704510818036262, guid: 75a25452d7adbae4d8239eded02c6a73, type: 3}
   graphic: {fileID: 0}
 --- !u!114 &4016179217326091244
 MonoBehaviour:
@@ -216,7 +217,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 301309001d853714e98eac94462d8bbe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 10
+  moveSpeed: 25
   maxHP: 20
   hp: 0
 --- !u!195 &988151457669156368

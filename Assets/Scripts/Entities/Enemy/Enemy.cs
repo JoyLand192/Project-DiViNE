@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Enemy : Entity
 {
+    [SerializeField] protected ParticleSystem testDeathParticle;
     [SerializeField] protected SpriteRenderer graphic;
     public override SpriteRenderer Graphic => graphic;
     protected EnemyMovement movement;
@@ -16,12 +17,19 @@ public class Enemy : Entity
         status = GetComponent<EnemyStatus>();
 
         status.OnMoveSpeedChanged += movement.ChangeSpeed;
-
-        Init();
+        status.OnDeath += Death;
+        status.Initialize();
     }
-    protected virtual void Init()
+    protected virtual void Dispose()
     {
-        status.HP = status.MaxHP;
+        status.OnMoveSpeedChanged -= movement.ChangeSpeed;
+        status.OnDeath -= Death;
+    }
+    public virtual void Death()
+    {
+        Destroy(gameObject);
+        var eff = Instantiate(testDeathParticle, transform.position, testDeathParticle.transform.rotation);
+        Destroy(eff.gameObject, eff.main.duration);
     }
     public virtual void SetTarget(GameObject target) => movement.DebugTarget = target;
 }

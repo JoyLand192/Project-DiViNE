@@ -15,7 +15,7 @@ public class CRStatus : EntityStatus
     public override float HP
     {
         get => base.HP;
-        set
+        protected set
         {
             var difference = value - base.HP;
 
