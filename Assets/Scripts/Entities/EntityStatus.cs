@@ -57,7 +57,7 @@ public abstract class EntityStatus : MonoBehaviour
         dt.IsCritical = dmg >= 1000;
 
         dt.SetText(dmg);
-        dt.SetSize(1f + Mathf.InverseLerp(5, 500, dmg) * 1.5f + Mathf.InverseLerp(500, 5000, dmg) * 0.5f);
+        dt.SetSize(0.8f + Mathf.InverseLerp(5, 500, dmg) * 0.6f + Mathf.InverseLerp(500, 5000, dmg) * 0.6f);
         dt.gameObject.SetActive(true);
         dt.Jump(transform.position, dtPool).Forget();
 

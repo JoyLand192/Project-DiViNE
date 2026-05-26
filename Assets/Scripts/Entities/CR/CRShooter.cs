@@ -11,15 +11,17 @@ public struct AttackInfo
     public Vector2 Direction;
     public bool IsFilpped;
     public float Damage;
+    public SpriteRenderer Weapon;
     public CRShooter Shooter;
     public BulletPool Pool;
     public DamageTextPool DTPool;
-    public AttackInfo(Vector3 position, Vector2 direction, bool isFlipped, float damage, CRShooter shooter, BulletPool pool, DamageTextPool dtPool)
+    public AttackInfo(Vector3 position, Vector2 direction, bool isFlipped, float damage, SpriteRenderer weapon, CRShooter shooter, BulletPool pool, DamageTextPool dtPool)
     {
         Position = position;
         Direction = direction;
         IsFilpped = isFlipped;
         Damage = damage;
+        Weapon = weapon;
         Shooter = shooter;
         Pool = pool;
         DTPool = dtPool;
@@ -184,6 +186,6 @@ public class CRShooter : MonoBehaviour
         var startPos = weaponGraphic == null ? transform.position : weaponGraphic.transform.position;
         float damage = DamageCalcRequest.Invoke(CurrentWeapon.BaseDamage);
 
-        CurrentWeapon.Launch(new AttackInfo(startPos, normalizedDirection, IsFlipped, damage, this, bulletPool, damageTextPool));
+        CurrentWeapon.Launch(new AttackInfo(startPos, normalizedDirection, IsFlipped, damage, weaponGraphic, this, bulletPool, damageTextPool));
     }
 }

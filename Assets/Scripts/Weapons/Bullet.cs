@@ -21,7 +21,7 @@ public class Bullet : MonoBehaviour
     public float MoveSpeed { get; set; }
     public bool IsMoving { get; set; }
     public Bullet Key { get; set; }
-    public CRShooter Shooter { get; set; }
+    public IShooter Shooter { get; set; }
     public ParticleSystem HitEffect { get; set; }
     public ParticleSystem BreakEffect { get; set; }
     public float Damage { get; set; }

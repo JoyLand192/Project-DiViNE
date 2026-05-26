@@ -18,5 +18,6 @@ MonoBehaviour:
   AttackCooldown: 0.5
   BaseDamage: 3
   bulletPrefab: {fileID: 2931786470903500585, guid: ec7608aee42edeb4eaf689f0740c53c1, type: 3}
+  launchEffect: {fileID: 5160613988126660386, guid: 86bbe4f0c8f5fc94791abc0e984f2a13, type: 3}
   BulletSpeed: 40
   BulletLifetime: 2

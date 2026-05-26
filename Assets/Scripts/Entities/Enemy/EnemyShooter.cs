@@ -1,8 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyShooter : MonoBehaviour
+public class EnemyShooter : MonoBehaviour, IShooter
 {
     [SerializeField] float damage;
     [SerializeField] DamageTextPool dtPool;
@@ -12,12 +13,13 @@ public class EnemyShooter : MonoBehaviour
     {
         if (timer > 0) timer -= Time.deltaTime;
     }
-    void OnCollisionEnter2D(Collision2D collision)
+    public void OnBulletHit(Bullet bullet, Vector2 direction, Collider2D target, 
+        float damage, ParticleSystem hitEffect = null, ParticleSystem breakEffect = null)
     {
-        if (collision.gameObject.layer == LayerMask.NameToLayer("CR") && timer <= 0)
-        {
-            timer = cd;
-            collision.gameObject.GetComponent<CRStatus>().TakeDamage(damage, dtPool);
-        }
+        throw new NotImplementedException();
+    }
+    public void OnBulletBreak(Bullet bullet)
+    {
+        throw new NotImplementedException();
     }
 }

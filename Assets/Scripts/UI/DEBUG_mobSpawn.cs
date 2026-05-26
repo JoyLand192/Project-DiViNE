@@ -10,5 +10,5 @@ public class DEBUG_mobSpawn : MonoBehaviour
     {
         for (int i = 0; i < 10; i++) Instantiate(enemyPrefab).SetTarget(cr.gameObject);
     }
-    public void GiveHP(float value) => cr.Status.TakeHeal(5);
+    public void GiveHP(float value) => cr.Status.TakeHeal(value);
 }

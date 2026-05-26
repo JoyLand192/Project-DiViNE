@@ -6,11 +6,15 @@ using UnityEngine;
 public class RangedWeapon : Weapon
 {
     public Bullet bulletPrefab;
+    public ParticleSystem launchEffect;
     public float BulletSpeed;
     public float BulletLifetime;
     public override void Launch(AttackInfo info)
     {
         var bullet = info.Pool.GetBullet(bulletPrefab, info.Shooter, info.Damage);
         bullet.Launch(info.Position, info.Direction, BulletSpeed, BulletLifetime, HitEffect, BreakEffect);
+
+        var launchEff = Instantiate(launchEffect, info.Weapon.transform);
+        Destroy(launchEff.gameObject, launchEff.main.duration);
     }
 }
