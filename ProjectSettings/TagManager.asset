@@ -15,8 +15,8 @@ TagManager:
   - 
   - CR
   - CRBullet
-  - 
-  - 
+  - Enemy
+  - EnemyBullet
   - 
   - 
   - 
@@ -40,6 +40,12 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Enemy
+    uniqueID: 2244935251
+    locked: 0
+  - name: CR
+    uniqueID: 3588664959
     locked: 0
   - name: CRBullet
     uniqueID: 3976326633

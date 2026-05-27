@@ -4,6 +4,7 @@ using UnityEngine;
 
 public interface IShooter
 {
+    public void Shoot();
     public void OnBulletHit(
         Bullet bullet,
         Vector2 direction,
@@ -12,4 +13,5 @@ public interface IShooter
         ParticleSystem hitEffect = null,
         ParticleSystem breakEffect = null);
     public void OnBulletBreak(Bullet bullet);
+    public void OnMeleeHit(Collider2D[] hitEntities, AttackInfo info, ParticleSystem part);
 }

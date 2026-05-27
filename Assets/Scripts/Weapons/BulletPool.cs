@@ -6,7 +6,7 @@ using Cysharp.Threading.Tasks;
 public class BulletPool : MonoBehaviour
 {
     Dictionary<Bullet, Queue<Bullet>> bulletPools = new();
-    public Bullet GetBullet(Bullet prefab, CRShooter shooter, float damage)
+    public Bullet GetBullet(Bullet prefab, IShooter shooter, float damage)
     {
         if (!bulletPools.ContainsKey(prefab)) bulletPools.Add(prefab, new Queue<Bullet>());
 

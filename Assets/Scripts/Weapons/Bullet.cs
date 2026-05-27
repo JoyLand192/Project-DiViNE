@@ -45,11 +45,11 @@ public class Bullet : MonoBehaviour
         rb.isKinematic = true;
         rb.velocity = Vector2.zero;
 
-        // 파티클 또는 타격 연출
-
         cts.Cancel();
         cts.Dispose();
         cts = new();
+
+        Debug.Log($"{gameObject.name} hit {other.name} at frame {Time.frameCount}");
     }
     public async void Launch(Vector2? startPos = null, Vector2? directionVector = null, float? speed = null, float? lifeTime = null, ParticleSystem hitEffect = null, ParticleSystem breakEffect = null)
     {

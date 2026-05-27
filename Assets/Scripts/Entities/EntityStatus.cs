@@ -34,11 +34,20 @@ public abstract class EntityStatus : MonoBehaviour
             if (hp == 0) Death();
         }
     }
-    public event System.Action OnDeath;
-    public virtual void Initialize()
+    [SerializeField] protected float strength;
+    public float Strength
     {
-        HP = MaxHP;
+        get
+        {
+            //...
+            return strength;
+        }
+        set
+        {
+            strength = value;
+        }
     }
+    public event System.Action OnDeath;
     public virtual void TakeHeal(float value)
     {
         var res = value;
@@ -59,7 +68,7 @@ public abstract class EntityStatus : MonoBehaviour
         dt.SetText(dmg);
         dt.SetSize(0.8f + Mathf.InverseLerp(5, 500, dmg) * 0.6f + Mathf.InverseLerp(500, 5000, dmg) * 0.6f);
         dt.gameObject.SetActive(true);
-        dt.Jump(transform.position, dtPool).Forget();
+        dt.Jump(transform.position + (Vector3)(Random.insideUnitCircle * 0.2f), dtPool).Forget();
 
         HP -= dmg;
     }

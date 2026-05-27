@@ -10,14 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 246e49927fd179c419a178df83585474, type: 3}
-  m_Name: smallgun
+  m_Name: Revolver
   m_EditorClassIdentifier: 
-  Sprite: {fileID: 21300000, guid: c5818951dbc81004296047c6f659ab25, type: 3}
+  Sprite: {fileID: 21300000, guid: 893b2383746bab24b8ca72b6e0ccf153, type: 3}
   BreakEffect: {fileID: 2478795949983013981, guid: 0d37d77548cb55d46b40d36940b2598b, type: 3}
   HitEffect: {fileID: 9060839745284300777, guid: 4cfa8e1e0383c1e42a2f6b29e8c18455, type: 3}
-  AttackCooldown: 0.05
-  BaseDamage: 1
-  bulletPrefab: {fileID: 2931786470903500585, guid: d981fe67a42bcca41a96ad4f7d1cf8f0, type: 3}
+  AttackCooldown: 0.6
+  BaseDamage: 3
+  bulletPrefab: {fileID: 2931786470903500585, guid: ec7608aee42edeb4eaf689f0740c53c1, type: 3}
   launchEffect: {fileID: 5160613988126660386, guid: 86bbe4f0c8f5fc94791abc0e984f2a13, type: 3}
-  BulletSpeed: 110
-  BulletLifetime: 1.5
+  BulletSpeed: 40
+  BulletLifetime: 2
+  LaunchPoint: {x: 0.75, y: 0.1}

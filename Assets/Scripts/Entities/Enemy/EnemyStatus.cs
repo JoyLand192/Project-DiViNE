@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,5 +14,17 @@ public class EnemyStatus : EntityStatus
             OnMoveSpeedChanged?.Invoke(value);
         }
     }
-    public event System.Action<float> OnMoveSpeedChanged;
+    public float AggroRange { get; set; }
+    public float AttackRange { get; set; }
+    public event Action<float> OnMoveSpeedChanged;
+    public void Initialize(EnemyInfo info)
+    {
+        MoveSpeed = info.MoveSpeed;
+        MaxHP = info.MaxHP;
+        Strength = info.Strength;
+        AggroRange = info.AggroRange;
+        AttackRange = info.AttackRange;
+
+        HP = MaxHP;
+    }
 }

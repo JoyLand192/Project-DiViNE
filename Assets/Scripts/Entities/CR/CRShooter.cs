@@ -4,33 +4,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
-
-public struct AttackInfo
-{
-    public Vector3 Position;
-    public Vector2 Direction;
-    public bool IsFilpped;
-    public float Damage;
-    public SpriteRenderer Weapon;
-    public CRShooter Shooter;
-    public BulletPool Pool;
-    public DamageTextPool DTPool;
-    public AttackInfo(Vector3 position, Vector2 direction, bool isFlipped, float damage, SpriteRenderer weapon, CRShooter shooter, BulletPool pool, DamageTextPool dtPool)
-    {
-        Position = position;
-        Direction = direction;
-        IsFilpped = isFlipped;
-        Damage = damage;
-        Weapon = weapon;
-        Shooter = shooter;
-        Pool = pool;
-        DTPool = dtPool;
-    }
-}
-public class CRShooter : MonoBehaviour
+public class CRShooter : MonoBehaviour, IShooter
 {
     [SerializeField] protected Weapon[] weapons = new Weapon[3];
-    [SerializeField] protected WeaponDisplayer display;
+    [SerializeField] protected WeaponUIDisplayer display;
     [SerializeField] protected BulletPool bulletPool;
     [SerializeField] protected SpriteRenderer weaponGraphic;
     [SerializeField] protected DamageTextPool damageTextPool;
@@ -92,7 +69,7 @@ public class CRShooter : MonoBehaviour
 
         Vector2 mouseVector = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
 
-        var distance = Mathf.Min(mouseVector.magnitude, weaponMaxDistance) * weaponDistanceScale + weaponMinDistance;
+        var distance = Mathf.Min(mouseVector.magnitude * weaponDistanceScale + weaponMinDistance, weaponMaxDistance);
         var fixedWeaponPos = mouseVector.normalized * distance;
         var angle = Mathf.Atan2(mouseVector.y, mouseVector.x) * Mathf.Rad2Deg;
 
@@ -177,15 +154,24 @@ public class CRShooter : MonoBehaviour
         await UniTask.Delay(30);
         bulletPool.Return(bullet);
     }
-    protected void Shoot()
+    public void Shoot()
     {
         if (bulletPool == null) return;
 
         var direction = (Vector2)(Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position);
         var normalizedDirection = direction.normalized;
-        var startPos = weaponGraphic == null ? transform.position : weaponGraphic.transform.position;
+        Vector3 startPos;
+        if (weaponGraphic == null) startPos = transform.position;
+        else
+        {
+            if (CurrentWeapon is RangedWeapon ranged)
+            {
+                startPos = weaponGraphic.transform.position + (weaponGraphic.transform.rotation * Vector3.Scale((Vector3)ranged.LaunchPoint, weaponGraphic.transform.lossyScale));
+            }
+            else startPos = weaponGraphic.transform.position;
+        }
         float damage = DamageCalcRequest.Invoke(CurrentWeapon.BaseDamage);
 
-        CurrentWeapon.Launch(new AttackInfo(startPos, normalizedDirection, IsFlipped, damage, weaponGraphic, this, bulletPool, damageTextPool));
+        CurrentWeapon.Launch(new AttackInfo(startPos, normalizedDirection, IsFlipped, damage, this, transform, weaponGraphic, bulletPool, damageTextPool));
     }
 }

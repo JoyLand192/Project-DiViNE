@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class WeaponDisplayer : MonoBehaviour
+public class WeaponUIDisplayer : MonoBehaviour
 {
     [SerializeField] List<Image> slots = new();
     [SerializeField] RectTransform currentSlotUI;

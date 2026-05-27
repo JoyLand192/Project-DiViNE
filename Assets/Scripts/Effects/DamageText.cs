@@ -19,6 +19,8 @@ public class DamageText : MonoBehaviour
     [SerializeField] float jumpPower;
     [SerializeField] float jumpHeight;
     [SerializeField] float duration;
+    const int tweenerCapacity = 500;
+    const int sequenceCapacity = 200;
     bool isCritical;
     public bool IsCritical
     {
@@ -35,6 +37,7 @@ public class DamageText : MonoBehaviour
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+         DOTween.SetTweensCapacity(tweenerCapacity, sequenceCapacity);
     }
     public void SetText(float damage) { if (TMP != null) TMP.text = $"{damage:0}"; }
     public void SetSize(float size) => transform.localScale = Vector3.one * size;

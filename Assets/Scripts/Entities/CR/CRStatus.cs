@@ -23,19 +23,6 @@ public class CRStatus : EntityStatus
             OnHPChanged?.Invoke(difference);
         }
     }
-    [SerializeField] protected float strength;
-    public float Strength
-    {
-        get
-        {
-            //...
-            return strength;
-        }
-        set
-        {
-            strength = value;
-        }
-    }
     public float Damage
     {
         get
