@@ -7,7 +7,6 @@ using static UnityEngine.EventSystems.EventTrigger;
 
 public class EnemyShooter : MonoBehaviour, IShooter
 {
-    [SerializeField] float damage;
     [SerializeField] DamageTextPool damageTextPool;
     [SerializeField] BulletPool bulletPool;
     [SerializeField] SpriteRenderer weaponGraphic;
@@ -47,9 +46,24 @@ public class EnemyShooter : MonoBehaviour, IShooter
             AttackCooldown = currentWeapon != null ? currentWeapon.AttackCooldown : null;
         }
     }
+    public Vector3 LaunchPoint
+    {
+        get
+        {
+            Vector3 startPos;
+            if (weaponGraphic == null) startPos = transform.position;
+            else
+            {
+                if (CurrentWeapon is RangedWeapon ranged) startPos = weaponGraphic.transform.position + (weaponGraphic.transform.rotation * Vector3.Scale((Vector3)ranged.LaunchPoint, weaponGraphic.transform.lossyScale));
+                else startPos = weaponGraphic.transform.position;
+            }
+            return startPos;
+        }
+    }
     public bool IsAttacking { get; set; }
     public bool IsFlipped { get; set; }
-    public event System.Action<CR> OnCRHit;
+    public event Action<CR> OnCRHit;
+    public Func<int, float> DamageCalcRequest;
     protected virtual void Update()
     {
         if (weaponGraphic != null) WeaponPos();
@@ -74,19 +88,10 @@ public class EnemyShooter : MonoBehaviour, IShooter
         if (CurrentTarget == null) return;
         if (currentWeapon == null) return;
 
-        Vector3 startPos;
-        if (weaponGraphic == null) startPos = transform.position;
-        else
-        {
-            if (CurrentWeapon is RangedWeapon ranged)
-            {
-                startPos = weaponGraphic.transform.position + (weaponGraphic.transform.rotation * Vector3.Scale((Vector3)ranged.LaunchPoint, weaponGraphic.transform.lossyScale));
-            }
-            else startPos = weaponGraphic.transform.position;
-        }
-        var normalizedDirection = (CurrentTarget.position - startPos).normalized;
+        var normalizedDirection = (CurrentTarget.position - LaunchPoint).normalized;
+        var damage = DamageCalcRequest?.Invoke(CurrentWeapon.BaseDamage) ?? CurrentWeapon.BaseDamage;
 
-        currentWeapon.Launch(new AttackInfo(startPos, normalizedDirection, IsFlipped, damage, this, transform, weaponGraphic, bulletPool, DamageTextPool));
+        currentWeapon.Launch(new AttackInfo(LaunchPoint, normalizedDirection, IsFlipped, damage, this, transform, weaponGraphic, bulletPool, DamageTextPool));
     }
     public void OnBulletHit(Bullet bullet, Vector2 direction, Collider2D target, float damage, ParticleSystem hitEffect = null, ParticleSystem breakEffect = null)
     {

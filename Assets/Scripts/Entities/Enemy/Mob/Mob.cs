@@ -56,16 +56,6 @@ public abstract class Mob : Enemy
     }
     protected virtual void DecideBehaviour()
     {
-        var currentTargetPosition = CurrentStageManager.CurrentCR.transform.position;
-        var currentTargetDistance = Vector3.Magnitude(currentTargetPosition - transform.position);
-        
-        if (currentTargetDistance < status.AttackRange) currentState = MobBehaviourState.Attacking;
-        else if (currentTargetDistance < status.AggroRange) currentState = MobBehaviourState.Chasing;
-        else currentState = MobBehaviourState.Idle;
-
-        shooter.CurrentTarget = currentTargetDistance < status.AggroRange ? CurrentStageManager.CurrentCR.transform : null;
-        shooter.IsAttacking = currentState == MobBehaviourState.Attacking;
-
         switch (currentState)
         {
             case MobBehaviourState.Idle:

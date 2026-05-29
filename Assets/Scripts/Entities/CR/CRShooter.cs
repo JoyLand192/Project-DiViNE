@@ -4,15 +4,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
+public class WeaponSlot
+{
+    public Weapon Weapon;
+    public int AmmoLeft;
+    public int MagazineLeft;
+    public WeaponSlot(Weapon weapon)
+    {
+        Weapon = weapon;
+        AmmoLeft = weapon.AmmoCount;
+        MagazineLeft = weapon.MagazineCount;
+    }
+}
 public class CRShooter : MonoBehaviour, IShooter
 {
-    [SerializeField] protected Weapon[] weapons = new Weapon[3];
-    [SerializeField] protected WeaponUIDisplayer display;
+    const int weaponSlotsCount = 3;
+    protected WeaponSlot[] weapons = new WeaponSlot[weaponSlotsCount];
+    [SerializeField] protected Weapon[] DEBUGWeapons;
+    [SerializeField] protected WeaponUIDisplayer weaponUIDisplay;
     [SerializeField] protected BulletPool bulletPool;
     [SerializeField] protected SpriteRenderer weaponGraphic;
     [SerializeField] protected DamageTextPool damageTextPool;
     [SerializeField] protected Weapon currentWeapon;
-    [SerializeField] protected int currentWeaponIndex = 1;
+    [SerializeField] protected int CurrentWeaponIndex = 1;
     [SerializeField] protected float weaponMinDistance = 0.5f;
     [SerializeField] protected float weaponMaxDistance = 6;
     [SerializeField] protected float weaponDistanceScale = 0.18f;
@@ -20,7 +34,7 @@ public class CRShooter : MonoBehaviour, IShooter
     public Weapon CurrentWeapon
     {
         get => currentWeapon;
-        set
+        protected set
         {
             currentWeapon = value;
             if (value == null)
@@ -32,17 +46,25 @@ public class CRShooter : MonoBehaviour, IShooter
             weaponGraphic.sprite = currentWeapon.Sprite;
         }
     }
+    public WeaponSlot CurrentWeaponSlot => weapons[CurrentWeaponIndex];
     public bool IsShootable { get; set; }
     public bool IsFlipped { get; set; }
     public bool IsSlashing { get; set; }
+    public bool IsReloading { get; set; }
     protected Camera cam;
     protected Vector3 weaponShakeOffset;
     protected Tween weaponShakeTween;
     public System.Func<int, float> DamageCalcRequest;
     public event System.Action<Enemy> OnEnemyHit;
+    public event System.Action<WeaponSlot> OnWeaponChanged;
+    public event System.Action<WeaponSlot> OnShoot;
+    public event System.Action<WeaponSlot, System.Action> OnReload;
     void Awake()
     {
         cam = GetComponent<Camera>();
+        for (int i = 0; i < weapons.Length; i++) weapons[i] = new WeaponSlot(DEBUGWeapons[i]);
+
+        if (weaponUIDisplay != null) weaponUIDisplay.Initialize(this);
     }
     protected void Update()
     {
@@ -50,9 +72,21 @@ public class CRShooter : MonoBehaviour, IShooter
         else if (Input.GetKeyDown(KeyCode.Alpha2)) ChangeWeapon(1);
         else if (Input.GetKeyDown(KeyCode.Alpha3)) ChangeWeapon(2);
         else if (Input.GetKeyDown(KeyCode.Space)) NextWeapon();
+        else if (Input.GetKeyDown(KeyCode.R) && CurrentWeapon is RangedWeapon)
+        {
+            if (IsReloading || CurrentWeaponSlot.AmmoLeft >= CurrentWeapon.AmmoCount || CurrentWeaponSlot.MagazineLeft <= 0) return;
+            Reload(CurrentWeaponSlot);
+        }
 
         Cooldown();
         if (weaponGraphic != null) WeaponPos();
+    }
+    protected void OnDestroy()
+    {
+        OnEnemyHit = null;
+        OnShoot = null;
+        OnReload = null;
+        OnWeaponChanged = null; 
     }
     protected virtual void Cooldown()
     {
@@ -85,13 +119,43 @@ public class CRShooter : MonoBehaviour, IShooter
 
         weaponGraphic.transform.position = transform.position + (Vector3)fixedWeaponPos + weaponShakeOffset;
     }
-    public void NextWeapon() => ChangeWeapon(++currentWeaponIndex % 3);
+    public void Reload(WeaponSlot weaponSlot)
+    {
+        if (weaponSlot.Weapon.ReloadEffect != null)
+        {
+            var eff = Instantiate(weaponSlot.Weapon.ReloadEffect, weaponGraphic.transform.position, weaponSlot.Weapon.ReloadEffect.transform.rotation);
+            Destroy(eff.gameObject, eff.main.duration);
+        }
+
+        weaponShakeTween.Kill(true);
+        weaponShakeTween = DOTween.Shake(
+            () => weaponShakeOffset,
+            (x) => weaponShakeOffset = x,
+            0.45f,
+            strength: 0.25f,
+            vibrato: 12);
+
+        IsReloading = true;
+        OnReload?.Invoke(weaponSlot, () =>
+        {
+            IsReloading = false;
+            weaponSlot.AmmoLeft = weaponSlot.Weapon.AmmoCount;
+            weaponSlot.MagazineLeft--;
+        });
+    }
+    public void NextWeapon() => ChangeWeapon(++CurrentWeaponIndex % 3);
     public void ChangeWeapon(int index)
     {
-        currentWeaponIndex = index;
+        if (IsReloading)
+        {
+            weaponUIDisplay.CancelReload(CurrentWeaponSlot);
+            IsReloading = false;
+        }
 
-        CurrentWeapon = weapons[index];
-        display.SetCurrentSlot(index);
+        CurrentWeaponIndex = index;
+
+        CurrentWeapon = weapons[index].Weapon;
+        weaponUIDisplay.SetCurrentSlot(index);
 
         weaponShakeTween.Kill(true);
         weaponShakeTween = DOTween.Shake(
@@ -100,6 +164,8 @@ public class CRShooter : MonoBehaviour, IShooter
             0.15f,
             strength: 0.175f,
             vibrato: 35);
+
+        OnWeaponChanged?.Invoke(CurrentWeaponSlot);
     }
     public void DelayedAction(float delay, System.Action action) => StartCoroutine(DelayedActionCoroutine(delay, action));
     public IEnumerator DelayedActionCoroutine(float delay, System.Action action)
@@ -157,6 +223,20 @@ public class CRShooter : MonoBehaviour, IShooter
     public void Shoot()
     {
         if (bulletPool == null) return;
+        if (IsReloading) return;
+
+        var ranged = CurrentWeapon as RangedWeapon;
+        if (ranged != null && CurrentWeaponSlot.AmmoLeft < CurrentWeapon.AmmoCost)
+        {
+            if (weapons[CurrentWeaponIndex].MagazineLeft <= 0)
+            {
+                //TODO : not enough fucking magazines
+                return;
+            }
+            Reload(CurrentWeaponSlot);
+
+            return;
+        }
 
         var direction = (Vector2)(Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position);
         var normalizedDirection = direction.normalized;
@@ -164,14 +244,14 @@ public class CRShooter : MonoBehaviour, IShooter
         if (weaponGraphic == null) startPos = transform.position;
         else
         {
-            if (CurrentWeapon is RangedWeapon ranged)
-            {
-                startPos = weaponGraphic.transform.position + (weaponGraphic.transform.rotation * Vector3.Scale((Vector3)ranged.LaunchPoint, weaponGraphic.transform.lossyScale));
-            }
+            if (ranged != null) startPos = weaponGraphic.transform.position + (weaponGraphic.transform.rotation * Vector3.Scale((Vector3)ranged.LaunchPoint, weaponGraphic.transform.lossyScale));
             else startPos = weaponGraphic.transform.position;
         }
         float damage = DamageCalcRequest.Invoke(CurrentWeapon.BaseDamage);
 
         CurrentWeapon.Launch(new AttackInfo(startPos, normalizedDirection, IsFlipped, damage, this, transform, weaponGraphic, bulletPool, damageTextPool));
+
+        CurrentWeaponSlot.AmmoLeft -= CurrentWeapon.AmmoCost;
+        OnShoot?.Invoke(CurrentWeaponSlot);
     }
 }

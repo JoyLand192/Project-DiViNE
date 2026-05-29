@@ -7,7 +7,12 @@ public abstract class Weapon : ScriptableObject
     public Sprite Sprite;
     public ParticleSystem BreakEffect;
     public ParticleSystem HitEffect;
+    public ParticleSystem ReloadEffect;
+    public float ReloadTime;
     public float AttackCooldown;
+    public int AmmoCount;
+    public int AmmoCost;
+    public int MagazineCount;
     public int BaseDamage;
     public abstract void Launch(AttackInfo info);
 }

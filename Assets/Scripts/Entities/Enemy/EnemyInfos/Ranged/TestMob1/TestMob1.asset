@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MoveSpeed: 12
   MaxHP: 50
-  Strength: 5
-  AggroRange: 30
-  AttackRange: 20
+  Strength: 2
+  AggroRange: 40
+  AttackRange: 18
   EnemyWeapon: {fileID: 11400000, guid: 563ec983c3d1d5d4391569b445804074, type: 2}

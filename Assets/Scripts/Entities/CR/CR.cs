@@ -14,7 +14,6 @@ public class CR : Entity
     public CREquipment Equipment => equipment;
     [SerializeField] protected SpriteRenderer graphic;
     public override SpriteRenderer Graphic => graphic;
-
     protected virtual void Awake()
     {
         movement = GetComponent<CRMovement>();

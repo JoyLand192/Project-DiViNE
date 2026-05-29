@@ -6,9 +6,9 @@ public class DEBUG_mobSpawn : MonoBehaviour
 {
     [SerializeField] Enemy enemyPrefab;
     [SerializeField] CR cr;
-    public void Spawn()
+    public void Spawn(int count)
     {
-        for (int i = 0; i < 10; i++) Instantiate(enemyPrefab);
+        for (int i = 0; i < count; i++) Instantiate(enemyPrefab);
     }
     public void GiveHP(float value) => cr.Status.TakeHeal(value);
 }

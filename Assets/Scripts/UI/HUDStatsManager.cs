@@ -11,9 +11,12 @@ public class HUDStatsManager : MonoBehaviour
     [SerializeField] Image hpIcon;
     [SerializeField] TextMeshProUGUI hpText;
     [SerializeField] CRStatus cr;
+    [SerializeField] Color hpHurtColor;
+    [SerializeField] Color hpRegenColor;
     RectTransform hpIconRect;
     RectTransform hpTextRect;
     Color hpIconOriginColor;
+    Color hpTextOriginColor;
     Vector3 hpIconOriginPos;
     void OnEnable()
     {
@@ -21,6 +24,7 @@ public class HUDStatsManager : MonoBehaviour
         hpTextRect = hpText.transform as RectTransform;
 
         hpIconOriginPos = hpIconRect.anchoredPosition;
+        hpTextOriginColor = hpText.color;
         hpIconOriginColor = hpIcon.color;
 
         cr.OnHPChanged += UpdateHP;
@@ -29,8 +33,8 @@ public class HUDStatsManager : MonoBehaviour
     {
         hpText.text = $"{cr.HP:0}";
 
-        //hpIcon.color = cr.HP / cr.MaxHP > hpWarnThreshold ? Color.white : Color.red;
-        var color = cr.HP / cr.MaxHP > hpWarnThreshold ? hpIconOriginColor : Color.red;
+        var heartColor = cr.HP / cr.MaxHP > hpWarnThreshold ? hpIconOriginColor : hpHurtColor;
+        var textColor = cr.HP / cr.MaxHP > hpWarnThreshold ? hpTextOriginColor : hpHurtColor;
 
         if (diff < 0)
         {
@@ -41,10 +45,10 @@ public class HUDStatsManager : MonoBehaviour
             hpIcon.DOKill(true);
             hpText.DOKill(true);
 
-            hpIcon.color = Color.red;
-            hpText.color = Color.red;
-            hpIcon.DOColor(color, 0.4f);
-            hpText.DOColor(color, 0.4f);
+            hpIcon.color = hpHurtColor;
+            hpText.color = hpHurtColor;
+            hpIcon.DOColor(heartColor, 0.4f);
+            hpText.DOColor(textColor, 0.4f);
 
             hpIconRect.DOShakeAnchorPos(duration: 0.4f, strength: intensity * 15, vibrato: 20, fadeOut: true);
             hpTextRect.DOShakeAnchorPos(duration: 0.4f, strength: intensity * 10, vibrato: 20, fadeOut: true);
@@ -58,10 +62,10 @@ public class HUDStatsManager : MonoBehaviour
             hpIcon.DOKill(true);
             hpText.DOKill(true);
 
-            hpIcon.color = Color.green;
-            hpText.color = Color.green;
-            hpIcon.DOColor(color, 0.4f);
-            hpText.DOColor(color, 0.4f);
+            hpIcon.color = hpRegenColor;
+            hpText.color = hpRegenColor;
+            hpIcon.DOColor(heartColor, 0.4f);
+            hpText.DOColor(textColor, 0.4f);
 
             hpIconRect.DOShakeAnchorPos(duration: 0.4f, strength: intensity * 12, vibrato: 15, fadeOut: true);
             hpTextRect.DOShakeAnchorPos(duration: 0.4f, strength: intensity * 8, vibrato: 15, fadeOut: true);

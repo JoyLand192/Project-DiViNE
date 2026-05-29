@@ -15,10 +15,12 @@ MonoBehaviour:
   Sprite: {fileID: 21300000, guid: d540276b7ff1dce45aacda2806de8129, type: 3}
   BreakEffect: {fileID: 2478795949983013981, guid: 0d37d77548cb55d46b40d36940b2598b, type: 3}
   HitEffect: {fileID: 8521457649215687811, guid: fd2874d745c14ef458829bfad58c9b11, type: 3}
-  AttackCooldown: 0.1
-  BaseDamage: 15
+  ReloadTime: 0
+  AttackCooldown: 0.4
+  AmmoCount: 0
+  BaseDamage: 5
   bulletPrefab: {fileID: 4817177812864940193, guid: 678f0d1256561994793523fa6361191b, type: 3}
   launchEffect: {fileID: 5160613988126660386, guid: bb0d7be86a9260547bd1b68fe1c88578, type: 3}
-  BulletSpeed: 33
+  BulletSpeed: 25
   BulletLifetime: 3
   LaunchPoint: {x: 0.9, y: 0.9}

@@ -43,6 +43,7 @@ public class Enemy : Entity
         shooter.CurrentWeapon = Info.EnemyWeapon;
         shooter.BulletPool = CurrentStageManager.BulletPool;
         shooter.DamageTextPool = CurrentStageManager.DamageTextPool;
+        shooter.DamageCalcRequest = (damageBase) => damageBase * status.Strength;
     }
     protected virtual void Start()
     {

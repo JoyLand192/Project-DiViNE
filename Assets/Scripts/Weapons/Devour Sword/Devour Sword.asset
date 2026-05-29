@@ -15,7 +15,11 @@ MonoBehaviour:
   Sprite: {fileID: 21300000, guid: 18ee3a0948ffb954c870d8ea28d723b9, type: 3}
   BreakEffect: {fileID: 2478795949983013981, guid: 0d37d77548cb55d46b40d36940b2598b, type: 3}
   HitEffect: {fileID: 1063000501744738628, guid: 1d97e79b7e40ebd40b643f2b95183504, type: 3}
+  ReloadTime: 0
   AttackCooldown: 0.6
+  AmmoCount: 1
+  AmmoCost: 0
+  MagazineCount: 0
   BaseDamage: 50
   SlashEffect: {fileID: 8507706197217528904, guid: 754883b5b7c2f464ca7cee8348b96684, type: 3}
   rangePoint1: {x: 7.5, y: 3, z: 0}
