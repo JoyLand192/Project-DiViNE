@@ -4884,6 +4884,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5751127008292512682, guid: 8e9de92fd34de0b4d9fc963df52b0124, type: 3}
+      propertyPath: InitialModule.startSize.scalar
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5751127008292512682, guid: 8e9de92fd34de0b4d9fc963df52b0124, type: 3}
+      propertyPath: InitialModule.startSizeY.scalar
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5751127008292512682, guid: 8e9de92fd34de0b4d9fc963df52b0124, type: 3}
+      propertyPath: CustomDataModule.color0.maxColor.b
+      value: 0.27620885
+      objectReference: {fileID: 0}
+    - target: {fileID: 5751127008292512682, guid: 8e9de92fd34de0b4d9fc963df52b0124, type: 3}
+      propertyPath: CustomDataModule.color0.maxColor.g
+      value: 0.65643156
+      objectReference: {fileID: 0}
+    - target: {fileID: 5751127008292512682, guid: 8e9de92fd34de0b4d9fc963df52b0124, type: 3}
+      propertyPath: CustomDataModule.color0.maxColor.r
+      value: 2.7883942
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4902,6 +4922,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 613963177619091870}
     m_Modifications:
+    - target: {fileID: 50886192339212785, guid: 86bbe4f0c8f5fc94791abc0e984f2a13, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: fc75cb2caa6f7e64680a38d92b897248, type: 2}
     - target: {fileID: 1639914819651320718, guid: 86bbe4f0c8f5fc94791abc0e984f2a13, type: 3}
       propertyPath: m_Name
       value: Flash

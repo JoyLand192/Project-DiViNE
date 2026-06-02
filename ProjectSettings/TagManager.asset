@@ -41,6 +41,18 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: CoinGlow
+    uniqueID: 2259058395
+    locked: 0
+  - name: Coin
+    uniqueID: 952848503
+    locked: 0
+  - name: ItemGlow
+    uniqueID: 527931371
+    locked: 0
+  - name: Item
+    uniqueID: 62665
+    locked: 0
   - name: Enemy
     uniqueID: 2244935251
     locked: 0

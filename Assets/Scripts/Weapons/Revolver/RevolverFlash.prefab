@@ -4778,7 +4778,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: fc75cb2caa6f7e64680a38d92b897248, type: 2}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4839,9 +4839,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 613963177619091870}
     m_Modifications:
+    - target: {fileID: 50886192339212785, guid: 86bbe4f0c8f5fc94791abc0e984f2a13, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 68f9e1df4614c464cb7abe03b60d0b3a, type: 2}
     - target: {fileID: 1639914819651320718, guid: 86bbe4f0c8f5fc94791abc0e984f2a13, type: 3}
       propertyPath: m_Name
       value: Flash
+      objectReference: {fileID: 0}
+    - target: {fileID: 5160613988126660386, guid: 86bbe4f0c8f5fc94791abc0e984f2a13, type: 3}
+      propertyPath: lengthInSec
+      value: 0.17
       objectReference: {fileID: 0}
     - target: {fileID: 5160613988126660386, guid: 86bbe4f0c8f5fc94791abc0e984f2a13, type: 3}
       propertyPath: CustomDataModule.color0.maxColor.b
@@ -4854,6 +4862,10 @@ PrefabInstance:
     - target: {fileID: 5160613988126660386, guid: 86bbe4f0c8f5fc94791abc0e984f2a13, type: 3}
       propertyPath: CustomDataModule.color0.maxColor.r
       value: 12.844469
+      objectReference: {fileID: 0}
+    - target: {fileID: 5160613988126660386, guid: 86bbe4f0c8f5fc94791abc0e984f2a13, type: 3}
+      propertyPath: InitialModule.startLifetime.scalar
+      value: 0.17
       objectReference: {fileID: 0}
     - target: {fileID: 5623274053221834313, guid: 86bbe4f0c8f5fc94791abc0e984f2a13, type: 3}
       propertyPath: m_LocalPosition.x

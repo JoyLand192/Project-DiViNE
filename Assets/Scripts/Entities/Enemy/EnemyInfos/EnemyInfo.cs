@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "EnemyInfo", menuName = "Project: DiViNE/Data/EnemyInfo")]
+[CreateAssetMenu(fileName = "EnemyInfo", menuName = "Project: DiViNE/Data/New EnemyInfo")]
 public class EnemyInfo : ScriptableObject
 {
     public float MoveSpeed;

@@ -10,6 +10,9 @@ using TMPro;
 
 public class WeaponUIDisplayer : MonoBehaviour
 {
+    [SerializeField] RectTransform magazineLinesContainer;
+    [SerializeField] Image magazineLinePrefab;
+    [SerializeField] List<Image> lines = new();
     [SerializeField] List<Image> slots = new();
     [SerializeField] RectTransform currentSlotUI;
     [SerializeField] Image reloadCircle;
@@ -42,9 +45,20 @@ public class WeaponUIDisplayer : MonoBehaviour
     void UpdateMagazine(WeaponSlot weaponSlot)
     {
         magazineBar.DOKill(true);
-        magazineBar.DOFillAmount((float)weaponSlot.AmmoLeft / weaponSlot.Weapon.AmmoCount, 0.25f).SetEase(Ease.OutCirc);
+        magazineBar.DOFillAmount((float)weaponSlot.AmmoLeft / weaponSlot.Weapon.AmmoCount, 0.16f).SetEase(Ease.OutExpo);
         ammoLeftText.text = $"{weaponSlot.AmmoLeft}";
         magazineLeftText.text = $"{weaponSlot.MagazineLeft}";
+
+        for (int i = 0; i < weaponSlot.Weapon.AmmoCount; i++)
+        {
+            if (i >= lines.Count)
+            {
+                Image newLine = Instantiate(magazineLinePrefab, magazineLinesContainer);
+                lines.Add(newLine);
+            }
+            lines[i].gameObject.SetActive(true);
+        }
+        for (int i = weaponSlot.Weapon.AmmoCount; i < lines.Count; i++) lines[i].gameObject.SetActive(false);
     }
     void OnReloadHandler(WeaponSlot slot, System.Action callback) => ReloadAnimation(slot, callback).Forget();
     async UniTask ReloadAnimation(WeaponSlot weaponSlot, System.Action callback)
