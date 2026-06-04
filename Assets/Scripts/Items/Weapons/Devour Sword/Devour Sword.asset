@@ -15,8 +15,9 @@ MonoBehaviour:
   Sprite: {fileID: 21300000, guid: 18ee3a0948ffb954c870d8ea28d723b9, type: 3}
   BreakEffect: {fileID: 2478795949983013981, guid: 0d37d77548cb55d46b40d36940b2598b, type: 3}
   HitEffect: {fileID: 1063000501744738628, guid: 1d97e79b7e40ebd40b643f2b95183504, type: 3}
+  ReloadEffect: {fileID: 0}
   ReloadTime: 0
-  AttackCooldown: 0.6
+  AttackCooldown: 0.25
   AmmoCount: 1
   AmmoCost: 0
   MagazineCount: 0

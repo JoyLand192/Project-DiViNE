@@ -106,7 +106,7 @@ ParticleSystem:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-  moveWithTransform: 1
+  moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 0
   randomSeed: 0
@@ -4872,7 +4872,7 @@ ParticleSystemRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -827197713
-  m_SortingLayer: 1
+  m_SortingLayer: 9
   m_SortingOrder: 0
   m_RenderMode: 4
   m_MeshDistribution: 0
@@ -5012,7 +5012,7 @@ ParticleSystem:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-  moveWithTransform: 1
+  moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 0
   randomSeed: 0
@@ -9158,7 +9158,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 2.2424533, g: 10.994019, b: 38.937145, a: 1}
+      maxColor: {r: 0.8497313, g: 4.165956, b: 14.754426, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -9778,7 +9778,7 @@ ParticleSystemRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -827197713
-  m_SortingLayer: 1
+  m_SortingLayer: 9
   m_SortingOrder: 0
   m_RenderMode: 4
   m_MeshDistribution: 0
@@ -13685,7 +13685,7 @@ ParticleSystem:
     primitives: []
   SubModule:
     serializedVersion: 2
-    enabled: 1
+    enabled: 0
     subEmitters:
     - serializedVersion: 3
       emitter: {fileID: 7818804326634237941}
@@ -14825,7 +14825,7 @@ ParticleSystem:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-  moveWithTransform: 1
+  moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 0
   randomSeed: 0
@@ -19327,9 +19327,9 @@ ParticleSystem:
         m_Curve:
         - serializedVersion: 3
           time: 0
-          value: 0.68461645
-          inSlope: -0.68461645
-          outSlope: -0.68461645
+          value: 0.4777187
+          inSlope: -0.4777187
+          outSlope: -0.4777187
           tangentMode: 34
           weightedMode: 0
           inWeight: 0
@@ -19337,8 +19337,8 @@ ParticleSystem:
         - serializedVersion: 3
           time: 1
           value: 0
-          inSlope: -0.68461645
-          outSlope: -0.68461645
+          inSlope: -0.4777187
+          outSlope: -0.4777187
           tangentMode: 34
           weightedMode: 0
           inWeight: 0.33333334
@@ -19591,7 +19591,7 @@ ParticleSystemRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -827197713
-  m_SortingLayer: 1
+  m_SortingLayer: 9
   m_SortingOrder: -1
   m_RenderMode: 4
   m_MeshDistribution: 0
@@ -19731,7 +19731,7 @@ ParticleSystem:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-  moveWithTransform: 1
+  moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 0
   randomSeed: 0

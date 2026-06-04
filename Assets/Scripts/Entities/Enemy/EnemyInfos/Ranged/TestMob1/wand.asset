@@ -17,13 +17,13 @@ MonoBehaviour:
   HitEffect: {fileID: 8521457649215687811, guid: fd2874d745c14ef458829bfad58c9b11, type: 3}
   ReloadEffect: {fileID: 0}
   ReloadTime: 0
-  AttackCooldown: 0.4
+  AttackCooldown: 0.8
   AmmoCount: 0
   AmmoCost: 0
   MagazineCount: 0
   BaseDamage: 5
   bulletPrefab: {fileID: 4817177812864940193, guid: 678f0d1256561994793523fa6361191b, type: 3}
   launchEffect: {fileID: 5160613988126660386, guid: bb0d7be86a9260547bd1b68fe1c88578, type: 3}
-  BulletSpeed: 25
+  BulletSpeed: 23
   BulletLifetime: 3
   LaunchPoint: {x: 0.9, y: 0.9}

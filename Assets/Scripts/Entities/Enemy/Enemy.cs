@@ -68,5 +68,10 @@ public class Enemy : Entity
         var eff = Instantiate(testDeathParticle, transform.position, testDeathParticle.transform.rotation);
         Destroy(eff.gameObject, eff.main.duration);
         Destroy(gameObject);
+
+        var coinValue = Random.Range(1, 45);
+        var coin = Instantiate(LootCoins.GetCoinObject(coinValue), transform.position, Quaternion.identity);
+        coin.CoinAmount = coinValue;
+        coin.Launch();
     }
 }

@@ -1,8 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-[CreateAssetMenu(menuName = "Game/New Melee Weapon", fileName = "New Melee Weapon")]
+[CreateAssetMenu(fileName = "MeleeWeapon", menuName = "Project: DiViNE/Items/New MeleeWeapon")]
 public class MeleeWeapon : Weapon
 {
     public ParticleSystem SlashEffect;

@@ -11,4 +11,5 @@ public class DEBUG_mobSpawn : MonoBehaviour
         for (int i = 0; i < count; i++) Instantiate(enemyPrefab);
     }
     public void GiveHP(float value) => cr.Status.TakeHeal(value);
+    public void FuckYourCoins(int value) => DataManager.Instance.CurrentCoin += value;
 }

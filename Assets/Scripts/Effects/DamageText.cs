@@ -37,7 +37,7 @@ public class DamageText : MonoBehaviour
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-         DOTween.SetTweensCapacity(tweenerCapacity, sequenceCapacity);
+        DOTween.SetTweensCapacity(tweenerCapacity, sequenceCapacity);
     }
     public void SetText(float damage) { if (TMP != null) TMP.text = $"{damage:0}"; }
     public void SetSize(float size) => transform.localScale = Vector3.one * size;
@@ -48,7 +48,7 @@ public class DamageText : MonoBehaviour
         rb.velocity = Vector3.zero;
         rb.AddForce(new Vector2(Random.Range(-1f, 1f), Random.Range(0.5f, 1f)).normalized * jumpPower + Vector2.up * jumpHeight, ForceMode2D.Impulse);
 
-        DOTween.Sequence().AppendInterval(duration / 2f).Append(transform.DOScale(0, duration / 2f).SetEase(Ease.InCubic));
+        _ = DOTween.Sequence().AppendInterval(duration / 2f).Append(transform.DOScale(0, duration / 2f).SetEase(Ease.InCubic));
         await UniTask.Delay(System.TimeSpan.FromSeconds(duration));
 
         if (pool == null)

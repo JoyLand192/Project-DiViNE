@@ -1,8 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-[CreateAssetMenu(menuName = "Game/New Ranged Weapon", fileName = "New Ranged Weapon")]
+[CreateAssetMenu(fileName = "RangedWeapon", menuName = "Project: DiViNE/Items/New RangedWeapon")]
 public class RangedWeapon : Weapon
 {
     public Bullet bulletPrefab;

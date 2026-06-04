@@ -20,10 +20,10 @@ MonoBehaviour:
   AttackCooldown: 0.1
   AmmoCount: 25
   AmmoCost: 1
-  MagazineCount: 999
+  MagazineCount: 5
   BaseDamage: 1
   bulletPrefab: {fileID: 2931786470903500585, guid: d981fe67a42bcca41a96ad4f7d1cf8f0, type: 3}
   launchEffect: {fileID: 5254004274368233022, guid: 14c33ccbabfed514e8a99f177c3df5db, type: 3}
-  BulletSpeed: 55
+  BulletSpeed: 45
   BulletLifetime: 1.5
   LaunchPoint: {x: 0.5, y: 0}

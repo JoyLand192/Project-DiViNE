@@ -3,6 +3,7 @@ using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.Rendering.Universal;
 public class WeaponSlot
 {
@@ -31,6 +32,7 @@ public class CRShooter : MonoBehaviour, IShooter
     [SerializeField] protected float weaponMaxDistance = 6;
     [SerializeField] protected float weaponDistanceScale = 0.18f;
     [SerializeField] protected float timer = 0;
+    public WeaponSlot[] Weapons => weapons;
     public Weapon CurrentWeapon
     {
         get => currentWeapon;
@@ -77,8 +79,7 @@ public class CRShooter : MonoBehaviour, IShooter
             if (IsReloading || CurrentWeaponSlot.AmmoLeft >= CurrentWeapon.AmmoCount || CurrentWeaponSlot.MagazineLeft <= 0) return;
             Reload(CurrentWeaponSlot);
         }
-
-        Cooldown();
+        CheckCooldown();
         if (weaponGraphic != null) WeaponPos();
     }
     protected void OnDestroy()
@@ -88,10 +89,10 @@ public class CRShooter : MonoBehaviour, IShooter
         OnReload = null;
         OnWeaponChanged = null; 
     }
-    protected virtual void Cooldown()
+    protected virtual void CheckCooldown()
     {
         if (timer > 0) timer -= Time.deltaTime;
-        if (CurrentWeapon != null && Input.GetMouseButton(0) && timer <= 0)
+        if (CurrentWeapon != null && Input.GetMouseButton(0) && timer <= 0 && !EventSystem.current.IsPointerOverGameObject())
         {
             Shoot();
             timer += CurrentWeapon.AttackCooldown;

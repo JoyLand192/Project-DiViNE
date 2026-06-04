@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f59514a10d534b4eab6d335a4c77eba, type: 3}
+  m_Name: normalSwood
+  m_EditorClassIdentifier: 
+  Sprite: {fileID: 21300000, guid: aabde119a7dc213408c238782a0d6fcc, type: 3}
+  BreakEffect: {fileID: 0}
+  HitEffect: {fileID: 8521457649215687811, guid: fd2874d745c14ef458829bfad58c9b11, type: 3}
+  ReloadEffect: {fileID: 0}
+  ReloadTime: 0
+  AttackCooldown: 0.3
+  AmmoCount: 1
+  AmmoCost: 0
+  MagazineCount: 1
+  BaseDamage: 2
+  SlashEffect: {fileID: 5275150547424824636, guid: d4d6664a7750a6243b13ff0dfc8cf0d1, type: 3}
+  rangePoint1: {x: 7, y: -2.5, z: 0}
+  rangePoint2: {x: -7, y: 2.5, z: 0}

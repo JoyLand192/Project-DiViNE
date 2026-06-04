@@ -12,8 +12,8 @@ public class WeaponUIDisplayer : MonoBehaviour
 {
     [SerializeField] RectTransform magazineLinesContainer;
     [SerializeField] Image magazineLinePrefab;
-    [SerializeField] List<Image> lines = new();
-    [SerializeField] List<Image> slots = new();
+    [SerializeField] List<Image> magazineLines = new();
+    [SerializeField] List<Image> weaponSlots = new();
     [SerializeField] RectTransform currentSlotUI;
     [SerializeField] Image reloadCircle;
     [SerializeField] Image magazineBar;
@@ -51,14 +51,14 @@ public class WeaponUIDisplayer : MonoBehaviour
 
         for (int i = 0; i < weaponSlot.Weapon.AmmoCount; i++)
         {
-            if (i >= lines.Count)
+            if (i >= magazineLines.Count)
             {
                 Image newLine = Instantiate(magazineLinePrefab, magazineLinesContainer);
-                lines.Add(newLine);
+                magazineLines.Add(newLine);
             }
-            lines[i].gameObject.SetActive(true);
+            magazineLines[i].gameObject.SetActive(true);
         }
-        for (int i = weaponSlot.Weapon.AmmoCount; i < lines.Count; i++) lines[i].gameObject.SetActive(false);
+        for (int i = weaponSlot.Weapon.AmmoCount; i < magazineLines.Count; i++) magazineLines[i].gameObject.SetActive(false);
     }
     void OnReloadHandler(WeaponSlot slot, System.Action callback) => ReloadAnimation(slot, callback).Forget();
     async UniTask ReloadAnimation(WeaponSlot weaponSlot, System.Action callback)
@@ -99,6 +99,7 @@ public class WeaponUIDisplayer : MonoBehaviour
         shooter.OnReload += OnReloadHandler;
 
         UpdateMagazine(shooter.CurrentWeaponSlot);
+        UpdateWeaponImage(shooter.Weapons);
     }
     public void CancelReload(WeaponSlot weaponSlot)
     {
@@ -113,21 +114,18 @@ public class WeaponUIDisplayer : MonoBehaviour
     }
     public void SetCurrentSlot(int index)
     {
-        slots[(index + 1) % 3].DOColor(disabledWeaponColor, disableWeaponColorFadeTime);
-        slots[(index + 2) % 3].DOColor(disabledWeaponColor, disableWeaponColorFadeTime);
-        slots[index].DOColor(Color.white, disableWeaponColorFadeTime);
+        weaponSlots[(index + 1) % 3].DOColor(disabledWeaponColor, disableWeaponColorFadeTime);
+        weaponSlots[(index + 2) % 3].DOColor(disabledWeaponColor, disableWeaponColorFadeTime);
+        weaponSlots[index].DOColor(Color.white, disableWeaponColorFadeTime);
 
         currentSlotUI.DOAnchorPosX((index - 1) * slotDistance, slotMoveDuration).SetEase(slotMoveEase);
     }
-    public void UpdateWeaponImage(Weapon weapon, int index)
+    public void UpdateWeaponImage(WeaponSlot[] weapons)
     {
-        if (weapon == null)
+        for (int i = 0; i < weapons.Length && i < weaponSlots.Count; i++)
         {
-            slots[index].gameObject.SetActive(false);
-            return;
+            weaponSlots[i].gameObject.SetActive(weapons[i] != null);
+            if (weapons[i] != null) weaponSlots[i].sprite = weapons[i].Weapon.Sprite;
         }
-        else slots[index].gameObject.SetActive(true);
-
-        slots[index].sprite = weapon.Sprite;
     }
 }
