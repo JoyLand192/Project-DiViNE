@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Rendering.Universal;
+[System.Serializable]
 public class WeaponSlot
 {
     public Weapon Weapon;
@@ -27,28 +28,41 @@ public class CRShooter : MonoBehaviour, IShooter
     [SerializeField] protected SpriteRenderer weaponGraphic;
     [SerializeField] protected DamageTextPool damageTextPool;
     [SerializeField] protected Weapon currentWeapon;
-    [SerializeField] protected int CurrentWeaponIndex = 1;
+    [SerializeField] protected int currentWeaponIndex = 1;
     [SerializeField] protected float weaponMinDistance = 0.5f;
     [SerializeField] protected float weaponMaxDistance = 6;
     [SerializeField] protected float weaponDistanceScale = 0.18f;
     [SerializeField] protected float timer = 0;
-    public WeaponSlot[] Weapons => weapons;
-    public Weapon CurrentWeapon
+    public Weapon CurrentWeapon => CurrentWeaponSlot?.Weapon;
+    public WeaponSlot CurrentWeaponSlot
     {
-        get => currentWeapon;
-        protected set
+        get
         {
-            currentWeapon = value;
+            if (currentWeaponIndex >= weapons.Length || currentWeaponIndex < 0) return null;
+            return weapons[currentWeaponIndex];
+        }
+        set
+        {
+            if (currentWeaponIndex >= weapons.Length || currentWeaponIndex < 0) return;
+            weapons[currentWeaponIndex] = value;
+
             if (value == null)
             {
-                weaponGraphic.gameObject.SetActive(false);
                 return;
             }
-            weaponGraphic.gameObject.SetActive(true);
-            weaponGraphic.sprite = currentWeapon.Sprite;
+
+            weaponShakeTween.Kill(true);
+            weaponShakeTween = DOTween.Shake(
+                () => weaponShakeOffset,
+                (x) => weaponShakeOffset = x,
+                0.15f,
+                strength: 0.175f,
+                vibrato: 35);
+            weaponGraphic.sprite = value.Weapon.Sprite;
+            weaponUIDisplay.UpdateWeaponImage(weapons);
+            OnWeaponChanged?.Invoke(CurrentWeaponSlot);
         }
     }
-    public WeaponSlot CurrentWeaponSlot => weapons[CurrentWeaponIndex];
     public bool IsShootable { get; set; }
     public bool IsFlipped { get; set; }
     public bool IsSlashing { get; set; }
@@ -66,7 +80,11 @@ public class CRShooter : MonoBehaviour, IShooter
         cam = GetComponent<Camera>();
         for (int i = 0; i < weapons.Length; i++) weapons[i] = new WeaponSlot(DEBUGWeapons[i]);
 
-        if (weaponUIDisplay != null) weaponUIDisplay.Initialize(this);
+        if (weaponUIDisplay != null)
+        {
+            weaponUIDisplay.Initialize(this);
+            weaponUIDisplay.UpdateWeaponImage(weapons);
+        }
     }
     protected void Update()
     {
@@ -74,7 +92,7 @@ public class CRShooter : MonoBehaviour, IShooter
         else if (Input.GetKeyDown(KeyCode.Alpha2)) ChangeWeapon(1);
         else if (Input.GetKeyDown(KeyCode.Alpha3)) ChangeWeapon(2);
         else if (Input.GetKeyDown(KeyCode.Space)) NextWeapon();
-        else if (Input.GetKeyDown(KeyCode.R) && CurrentWeapon is RangedWeapon)
+        else if (Input.GetKeyDown(KeyCode.R) && CurrentWeaponSlot != null && CurrentWeaponSlot.Weapon is RangedWeapon)
         {
             if (IsReloading || CurrentWeaponSlot.AmmoLeft >= CurrentWeapon.AmmoCount || CurrentWeaponSlot.MagazineLeft <= 0) return;
             Reload(CurrentWeaponSlot);
@@ -144,7 +162,7 @@ public class CRShooter : MonoBehaviour, IShooter
             weaponSlot.MagazineLeft--;
         });
     }
-    public void NextWeapon() => ChangeWeapon(++CurrentWeaponIndex % 3);
+    public void NextWeapon() => ChangeWeapon(++currentWeaponIndex % 3);
     public void ChangeWeapon(int index)
     {
         if (IsReloading)
@@ -152,10 +170,17 @@ public class CRShooter : MonoBehaviour, IShooter
             weaponUIDisplay.CancelReload(CurrentWeaponSlot);
             IsReloading = false;
         }
+        if (index < 0 || index >= weapons.Length) return;
 
-        CurrentWeaponIndex = index;
+        currentWeaponIndex = index;
+        CurrentWeaponSlot.Weapon = weapons[index].Weapon;
+        if (CurrentWeaponSlot.Weapon != null)
+        {
+            weaponGraphic.gameObject.SetActive(true);
+            weaponGraphic.sprite = CurrentWeaponSlot.Weapon.Sprite;
+        }
+        else weaponGraphic.gameObject.SetActive(false);
 
-        CurrentWeapon = weapons[index].Weapon;
         weaponUIDisplay.SetCurrentSlot(index);
 
         weaponShakeTween.Kill(true);
@@ -191,8 +216,6 @@ public class CRShooter : MonoBehaviour, IShooter
     {
         if (target.TryGetComponent<Enemy>(out var enemy))
         {
-            Debug.Log($"데미지 발생! {Time.frameCount}");
-
             if (hitEffect != null)
             {
                 var eff = Instantiate(hitEffect, enemy.transform.position, Quaternion.Euler(-90, 0, 0));
@@ -229,7 +252,7 @@ public class CRShooter : MonoBehaviour, IShooter
         var ranged = CurrentWeapon as RangedWeapon;
         if (ranged != null && CurrentWeaponSlot.AmmoLeft < CurrentWeapon.AmmoCost)
         {
-            if (weapons[CurrentWeaponIndex].MagazineLeft <= 0)
+            if (weapons[currentWeaponIndex].MagazineLeft <= 0)
             {
                 //TODO : not enough fucking magazines
                 return;

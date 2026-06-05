@@ -12,6 +12,8 @@ public class CR : Entity
     public CRShooter Shooter => shooter;
     protected CREquipment equipment;
     public CREquipment Equipment => equipment;
+    protected CRInteractionManager interactionManager;
+    public CRInteractionManager InteractionManager => interactionManager;
     [SerializeField] protected SpriteRenderer graphic;
     public override SpriteRenderer Graphic => graphic;
     protected virtual void Awake()
@@ -20,8 +22,10 @@ public class CR : Entity
         status = GetComponent<CRStatus>();
         shooter = GetComponent<CRShooter>();
         equipment = GetComponent<CREquipment>();
+        interactionManager = GetComponent<CRInteractionManager>();
 
         shooter.DamageCalcRequest = (damageBase) => damageBase * status.Damage;
+        interactionManager.OnInteracted += (interaction) => interaction.Interact(this);
     }
     protected virtual void FixedUpdate()
     {

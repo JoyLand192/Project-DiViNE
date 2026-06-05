@@ -97,8 +97,6 @@ public class EnemyShooter : MonoBehaviour, IShooter
     {
         if (target.TryGetComponent<CR>(out var cr))
         {
-            Debug.Log($"데미지 발생! {Time.frameCount}");
-
             if (hitEffect != null)
             {
                 var eff = Instantiate(hitEffect, cr.transform.position, Quaternion.Euler(-90, 0, 0));

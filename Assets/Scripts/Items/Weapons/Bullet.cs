@@ -48,8 +48,6 @@ public class Bullet : MonoBehaviour
         cts.Cancel();
         cts.Dispose();
         cts = new();
-
-        Debug.Log($"{gameObject.name} hit {other.name} at frame {Time.frameCount}");
     }
     public async void Launch(Vector2? startPos = null, Vector2? directionVector = null, float? speed = null, float? lifeTime = null, ParticleSystem hitEffect = null, ParticleSystem breakEffect = null)
     {

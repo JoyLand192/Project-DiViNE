@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using Cysharp.Threading.Tasks;
 using System.Threading;
-using System;
 using TMPro;
 
 public class WeaponUIDisplayer : MonoBehaviour
@@ -81,7 +80,7 @@ public class WeaponUIDisplayer : MonoBehaviour
                 .Join(reloadCircle.DOFillAmount(1, weaponSlot.Weapon.ReloadTime).SetEase(Ease.Linear))
                 .AppendCallback(() => callback?.Invoke());
         }
-        catch (OperationCanceledException)
+        catch (System.OperationCanceledException)
         {
 
         }
@@ -99,7 +98,6 @@ public class WeaponUIDisplayer : MonoBehaviour
         shooter.OnReload += OnReloadHandler;
 
         UpdateMagazine(shooter.CurrentWeaponSlot);
-        UpdateWeaponImage(shooter.Weapons);
     }
     public void CancelReload(WeaponSlot weaponSlot)
     {
