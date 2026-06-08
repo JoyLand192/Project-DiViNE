@@ -1,11 +1,13 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class WeaponDrop : MonoBehaviour, IInteraction, ILaunchable
 {
     [SerializeField] Weapon DEBUGWEAPON;
+    [SerializeField] WeaponDropDisplayer interactionDisplayer;
     readonly string[] blockingLayers = { "HardWall" }; // TODO : Add BreakableWall layer and include it here
     WeaponSlot weaponSlotInfo;
     SpriteRenderer render;
@@ -23,6 +25,12 @@ public class WeaponDrop : MonoBehaviour, IInteraction, ILaunchable
         set
         {
             isDisplayingUI = value;
+            if (interactionDisplayer.TweenExist)
+            {
+                if (value) interactionDisplayer.Resume();
+                else interactionDisplayer.Pause();
+            }
+            else if (value) interactionDisplayer.Initialize();
         }
     }
     Tween currentLaunchTween;
@@ -38,10 +46,23 @@ public class WeaponDrop : MonoBehaviour, IInteraction, ILaunchable
     {
         weaponSlotInfo = new WeaponSlot(weapon);
         render.sprite = weapon.Sprite;
+        interactionDisplayer.LabelText = $"{weapon.WeaponName}";
+        interactionDisplayer.CanvasPosition = render.bounds.center;
     }
     public void Interact(CR cr)
     {
-        cr.Shooter.CurrentWeaponSlot = weaponSlotInfo;
+        var swapped = cr.Shooter.ChangeWeapon(weaponSlotInfo);
+        if (swapped == null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        weaponSlotInfo = swapped;
+        render.sprite = weaponSlotInfo.Weapon.Sprite;
+        interactionDisplayer.LabelText = $"{weaponSlotInfo.Weapon.WeaponName}";
+        interactionDisplayer.CanvasPosition = render.bounds.center;
+
+        Launch(power: 1.2f, duration: 0.4f);
     }
     public void Launch(float power = 2.5f, float duration = 0.6f)
     {

@@ -46,10 +46,7 @@ public class CRShooter : MonoBehaviour, IShooter
             if (currentWeaponIndex >= weapons.Length || currentWeaponIndex < 0) return;
             weapons[currentWeaponIndex] = value;
 
-            if (value == null)
-            {
-                return;
-            }
+            if (value == null) return;
 
             weaponShakeTween.Kill(true);
             weaponShakeTween = DOTween.Shake(
@@ -88,9 +85,9 @@ public class CRShooter : MonoBehaviour, IShooter
     }
     protected void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1)) ChangeWeapon(0);
-        else if (Input.GetKeyDown(KeyCode.Alpha2)) ChangeWeapon(1);
-        else if (Input.GetKeyDown(KeyCode.Alpha3)) ChangeWeapon(2);
+        if (Input.GetKeyDown(KeyCode.Alpha1)) ChangeWeaponSlot(0);
+        else if (Input.GetKeyDown(KeyCode.Alpha2)) ChangeWeaponSlot(1);
+        else if (Input.GetKeyDown(KeyCode.Alpha3)) ChangeWeaponSlot(2);
         else if (Input.GetKeyDown(KeyCode.Space)) NextWeapon();
         else if (Input.GetKeyDown(KeyCode.R) && CurrentWeaponSlot != null && CurrentWeaponSlot.Weapon is RangedWeapon)
         {
@@ -162,8 +159,8 @@ public class CRShooter : MonoBehaviour, IShooter
             weaponSlot.MagazineLeft--;
         });
     }
-    public void NextWeapon() => ChangeWeapon(++currentWeaponIndex % 3);
-    public void ChangeWeapon(int index)
+    public void NextWeapon() => ChangeWeaponSlot(++currentWeaponIndex % 3);
+    public void ChangeWeaponSlot(int index)
     {
         if (IsReloading)
         {
@@ -192,6 +189,12 @@ public class CRShooter : MonoBehaviour, IShooter
             vibrato: 35);
 
         OnWeaponChanged?.Invoke(CurrentWeaponSlot);
+    }
+    public WeaponSlot ChangeWeapon(WeaponSlot slot)
+    {
+        var prev = CurrentWeaponSlot;
+        CurrentWeaponSlot = slot;
+        return prev;
     }
     public void DelayedAction(float delay, System.Action action) => StartCoroutine(DelayedActionCoroutine(delay, action));
     public IEnumerator DelayedActionCoroutine(float delay, System.Action action)

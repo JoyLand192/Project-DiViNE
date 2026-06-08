@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f59514a10d534b4eab6d335a4c77eba, type: 3}
   m_Name: normalSwood
   m_EditorClassIdentifier: 
+  WeaponName: "\uC774 \uCE7C \uBCC4\uB85C\uC784"
   Sprite: {fileID: 21300000, guid: aabde119a7dc213408c238782a0d6fcc, type: 3}
   BreakEffect: {fileID: 0}
   HitEffect: {fileID: 8521457649215687811, guid: fd2874d745c14ef458829bfad58c9b11, type: 3}

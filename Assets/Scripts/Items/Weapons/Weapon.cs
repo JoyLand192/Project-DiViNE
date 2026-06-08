@@ -4,6 +4,7 @@ using UnityEngine;
 
 public abstract class Weapon : ScriptableObject
 {
+    public string WeaponName;
     public Sprite Sprite;
     public ParticleSystem BreakEffect;
     public ParticleSystem HitEffect;
