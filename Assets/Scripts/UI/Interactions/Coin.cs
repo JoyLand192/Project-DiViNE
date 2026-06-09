@@ -19,6 +19,7 @@ public class Coin : MonoBehaviour, ILaunchable
     CircleCollider2D crDetector;
     CR currentTarget;
     Tween currentLaunchTween;
+    Transform detectedTransform;
     float currentSpeed = defaultSpeed;
     public Tween CurrentLaunchTween => currentLaunchTween;
 
@@ -28,12 +29,29 @@ public class Coin : MonoBehaviour, ILaunchable
     }
     void Update()
     {
+        if (detectedTransform != null)
+        {
+            var offset = detectedTransform.transform.position - transform.position;
+            var blockRay = Physics2D.Raycast(transform.position, offset.normalized, Vector3.Magnitude(offset), LayerMask.GetMask(blockingLayers));
+
+            if (blockRay) return;
+
+            currentTarget = detectedTransform.GetComponent<CR>();
+            crDetector.enabled = false;
+
+            if (currentLaunchTween != null)
+            {
+                currentLaunchTween.Kill(false);
+                currentLaunchTween = null;
+            }
+            detectedTransform = null;
+        }
         if (currentTarget == null) return;
         if (Vector2.Distance(transform.position, currentTarget.transform.position) < gainDistance)
         {
             DataManager.Instance.CurrentCoin += coinAmount;
 
-            var prefab = LootCoins.GetCoinEffect(coinAmount);
+            var prefab = LootDrops.GetCoinEffect(coinAmount);
             var eff = Instantiate(prefab, transform.position, prefab.transform.rotation);
 
             Destroy(eff.gameObject, eff.main.duration);
@@ -49,16 +67,13 @@ public class Coin : MonoBehaviour, ILaunchable
     }
     void OnTriggerEnter2D(Collider2D collision)
     {
-        currentTarget = collision.GetComponent<CR>();
-        crDetector.enabled = false;
-
-        if (currentLaunchTween != null)
-        {
-            currentLaunchTween.Kill(false);
-            currentLaunchTween = null;
-        }
+        detectedTransform = collision.transform;
     }
-    public void Launch(float power = 7f, float duration = 0.6f)
+    void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.transform == detectedTransform) detectedTransform = null;
+    }
+    public void Launch(float power = 4.5f, float duration = 0.6f)
     {
         var direction = (Vector3)Random.insideUnitCircle.normalized;
         var fixedPower = power * Random.Range(0.85f, 1.15f);

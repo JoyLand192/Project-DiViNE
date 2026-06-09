@@ -27,9 +27,9 @@ public class Enemy : Entity
     public EnemyStatus Status => status;
     protected virtual void Awake()
     {
-        if (Info == null) 
-        { 
-            Debug.LogError("Enemy Info is not assigned!", this); 
+        if (Info == null)
+        {
+            Debug.LogError("Enemy Info is not assigned!", this);
             Destroy(gameObject);
 
             return;
@@ -69,9 +69,20 @@ public class Enemy : Entity
         Destroy(eff.gameObject, eff.main.duration);
         Destroy(gameObject);
 
-        var coinValue = Random.Range(1, 45);
-        var coin = Instantiate(LootCoins.GetCoinObject(coinValue), transform.position, Quaternion.identity);
+        var coinValue = Mathf.RoundToInt(Random.Range(Info.LootInfo.MinCoinAmount, Info.LootInfo.MaxCoinAmount));
+        var coin = Instantiate(LootDrops.GetCoinObject(coinValue), transform.position, Quaternion.identity);
         coin.CoinAmount = coinValue;
         coin.Launch();
+
+        var drop = Info.LootInfo.Roll();
+        if (drop == null) return;
+        if (drop.Drop is Weapon dropWeapon)
+        {
+            var dropObj = Instantiate(LootDrops.WeaponDropPrefab, transform.position, Quaternion.identity);
+            dropObj.Initialize(dropWeapon);
+            dropObj.Launch();
+        }
+
+        //TODO: drop loot
     }
 }

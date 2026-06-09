@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f59514a10d534b4eab6d335a4c77eba, type: 3}
+  m_Name: DefaultMelee
+  m_EditorClassIdentifier: 
+  WeaponName: "\uC8FC\uBA39"
+  Sprite: {fileID: 0}
+  BreakEffect: {fileID: 0}
+  HitEffect: {fileID: 3240199708556765610, guid: 63b8a086bfd5e2a428b7424e8d12d142, type: 3}
+  ReloadEffect: {fileID: 0}
+  ReloadTime: 0
+  AttackCooldown: 0.5
+  AmmoCount: 1
+  AmmoCost: 0
+  MagazineCount: 1
+  BaseDamage: 1
+  SlashEffect: {fileID: 262393644787670963, guid: 3ec07d0e5c476244ca2d312119ae97aa, type: 3}
+  rangePoint1: {x: 3, y: 1.5, z: 0}
+  rangePoint2: {x: -3, y: -1.5, z: 0}

@@ -49,7 +49,6 @@ public class WeaponDropDisplayer : InteractionDisplayer
         container.gameObject.SetActive(false);
         currentTween?.Pause();
     }
-
     public override void Resume()
     {
         container?.gameObject.SetActive(true);

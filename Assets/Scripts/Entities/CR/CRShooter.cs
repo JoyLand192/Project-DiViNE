@@ -2,6 +2,7 @@ using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Rendering.Universal;
@@ -11,17 +12,20 @@ public class WeaponSlot
     public Weapon Weapon;
     public int AmmoLeft;
     public int MagazineLeft;
-    public WeaponSlot(Weapon weapon)
+    public bool Droppable;
+    public WeaponSlot(Weapon weapon, bool droppable = true)
     {
         Weapon = weapon;
-        AmmoLeft = weapon.AmmoCount;
-        MagazineLeft = weapon.MagazineCount;
+        AmmoLeft = weapon == null ? default : weapon.AmmoCount;
+        MagazineLeft = weapon == null ? default : weapon.MagazineCount;
+        Droppable = droppable;
     }
 }
 public class CRShooter : MonoBehaviour, IShooter
 {
     const int weaponSlotsCount = 3;
-    protected WeaponSlot[] weapons = new WeaponSlot[weaponSlotsCount];
+    [SerializeField] protected WeaponSlot[] weapons = new WeaponSlot[weaponSlotsCount];
+    [SerializeField] protected Weapon defaultMeleeWeapon;
     [SerializeField] protected Weapon[] DEBUGWeapons;
     [SerializeField] protected WeaponUIDisplayer weaponUIDisplay;
     [SerializeField] protected BulletPool bulletPool;
@@ -33,12 +37,14 @@ public class CRShooter : MonoBehaviour, IShooter
     [SerializeField] protected float weaponMaxDistance = 6;
     [SerializeField] protected float weaponDistanceScale = 0.18f;
     [SerializeField] protected float timer = 0;
+    WeaponSlot defaultSlot;
     public Weapon CurrentWeapon => CurrentWeaponSlot?.Weapon;
     public WeaponSlot CurrentWeaponSlot
     {
         get
         {
             if (currentWeaponIndex >= weapons.Length || currentWeaponIndex < 0) return null;
+            if (weapons.FirstOrDefault(p => p?.Weapon != null) == null) return defaultSlot;
             return weapons[currentWeaponIndex];
         }
         set
@@ -46,7 +52,12 @@ public class CRShooter : MonoBehaviour, IShooter
             if (currentWeaponIndex >= weapons.Length || currentWeaponIndex < 0) return;
             weapons[currentWeaponIndex] = value;
 
-            if (value == null) return;
+            if (value == null)
+            {
+                weaponUIDisplay.UpdateWeaponImage(weapons);
+                OnWeaponChanged?.Invoke(CurrentWeaponSlot);
+                return;
+            }
 
             weaponShakeTween.Kill(true);
             weaponShakeTween = DOTween.Shake(
@@ -61,6 +72,7 @@ public class CRShooter : MonoBehaviour, IShooter
         }
     }
     public bool IsShootable { get; set; }
+    public bool IsThrowable { get; set; } = true;
     public bool IsFlipped { get; set; }
     public bool IsSlashing { get; set; }
     public bool IsReloading { get; set; }
@@ -75,6 +87,8 @@ public class CRShooter : MonoBehaviour, IShooter
     void Awake()
     {
         cam = GetComponent<Camera>();
+        defaultSlot = new(defaultMeleeWeapon, false);
+
         for (int i = 0; i < weapons.Length; i++) weapons[i] = new WeaponSlot(DEBUGWeapons[i]);
 
         if (weaponUIDisplay != null)
@@ -89,6 +103,7 @@ public class CRShooter : MonoBehaviour, IShooter
         else if (Input.GetKeyDown(KeyCode.Alpha2)) ChangeWeaponSlot(1);
         else if (Input.GetKeyDown(KeyCode.Alpha3)) ChangeWeaponSlot(2);
         else if (Input.GetKeyDown(KeyCode.Space)) NextWeapon();
+        else if (Input.GetKeyDown(KeyCode.X) && CurrentWeaponSlot != null && CurrentWeaponSlot.Droppable && IsThrowable) Throw();
         else if (Input.GetKeyDown(KeyCode.R) && CurrentWeaponSlot != null && CurrentWeaponSlot.Weapon is RangedWeapon)
         {
             if (IsReloading || CurrentWeaponSlot.AmmoLeft >= CurrentWeapon.AmmoCount || CurrentWeaponSlot.MagazineLeft <= 0) return;
@@ -135,6 +150,22 @@ public class CRShooter : MonoBehaviour, IShooter
 
         weaponGraphic.transform.position = transform.position + (Vector3)fixedWeaponPos + weaponShakeOffset;
     }
+    public void Throw()
+    {
+        var throwingWeapon = CurrentWeaponSlot;
+        CurrentWeaponSlot = null;
+
+        var nextWeapon = weapons.FirstOrDefault(p => p?.Weapon != null);
+        if (nextWeapon != null) ChangeWeaponSlot(weapons.ToList().IndexOf(nextWeapon));
+        else
+        {
+            weaponGraphic.gameObject.SetActive(false);
+        }
+
+        var thrownItem = Instantiate(LootDrops.WeaponDropPrefab, transform.position, Quaternion.identity);
+        thrownItem.Initialize(throwingWeapon.Weapon);
+        thrownItem.Launch();
+    }
     public void Reload(WeaponSlot weaponSlot)
     {
         if (weaponSlot.Weapon.ReloadEffect != null)
@@ -170,14 +201,18 @@ public class CRShooter : MonoBehaviour, IShooter
         if (index < 0 || index >= weapons.Length) return;
 
         currentWeaponIndex = index;
-        CurrentWeaponSlot.Weapon = weapons[index].Weapon;
-        if (CurrentWeaponSlot.Weapon != null)
-        {
-            weaponGraphic.gameObject.SetActive(true);
-            weaponGraphic.sprite = CurrentWeaponSlot.Weapon.Sprite;
-        }
-        else weaponGraphic.gameObject.SetActive(false);
 
+        if (CurrentWeaponSlot?.Weapon == null)
+        {
+            weaponGraphic.gameObject.SetActive(false);
+            weaponUIDisplay.SetCurrentSlot(index);
+            OnWeaponChanged?.Invoke(CurrentWeaponSlot);
+
+            return; 
+        }
+
+        weaponGraphic.gameObject.SetActive(true);
+        weaponGraphic.sprite = CurrentWeaponSlot.Weapon.Sprite;
         weaponUIDisplay.SetCurrentSlot(index);
 
         weaponShakeTween.Kill(true);
@@ -190,9 +225,24 @@ public class CRShooter : MonoBehaviour, IShooter
 
         OnWeaponChanged?.Invoke(CurrentWeaponSlot);
     }
-    public WeaponSlot ChangeWeapon(WeaponSlot slot)
+    public WeaponSlot GainWeapon(WeaponSlot slot)
     {
-        var prev = CurrentWeaponSlot;
+        var currentEmptySlot = weapons.FirstOrDefault(p => p?.Weapon == null || p.Weapon == defaultMeleeWeapon);
+        if (currentEmptySlot != null)
+        {
+            var index = weapons.ToList().IndexOf(currentEmptySlot);
+            weapons[index] = slot;
+            weaponUIDisplay.UpdateWeaponImage(weapons);
+            ChangeWeaponSlot(index);
+
+            return null;
+        }
+        if (IsReloading)
+        {
+            weaponUIDisplay.CancelReload(CurrentWeaponSlot);
+            IsReloading = false;
+        }
+        var prev = CurrentWeaponSlot?.Weapon == defaultMeleeWeapon ? null : CurrentWeaponSlot;
         CurrentWeaponSlot = slot;
         return prev;
     }

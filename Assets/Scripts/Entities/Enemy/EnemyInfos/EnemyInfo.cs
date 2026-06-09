@@ -11,4 +11,5 @@ public class EnemyInfo : ScriptableObject
     public float AggroRange;
     public float AttackRange;
     public Weapon EnemyWeapon;
+    public EnemyLootInfo LootInfo;
 }

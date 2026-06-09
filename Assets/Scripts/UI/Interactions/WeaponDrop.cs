@@ -3,14 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngineInternal;
 
 public class WeaponDrop : MonoBehaviour, IInteraction, ILaunchable
 {
-    [SerializeField] Weapon DEBUGWEAPON;
     [SerializeField] WeaponDropDisplayer interactionDisplayer;
+    [SerializeField] SpriteRenderer graphic;
     readonly string[] blockingLayers = { "HardWall" }; // TODO : Add BreakableWall layer and include it here
     WeaponSlot weaponSlotInfo;
-    SpriteRenderer render;
     public Vector3 CurrentPosition => transform.position;
     bool isAvailable = true;
     public bool IsAvailable
@@ -35,32 +36,41 @@ public class WeaponDrop : MonoBehaviour, IInteraction, ILaunchable
     }
     Tween currentLaunchTween;
     public Tween CurrentLaunchTween => currentLaunchTween;
-    void Awake()
-    {
-        render = gameObject.GetComponent<SpriteRenderer>();
+    bool isDestroyed;
 
-        Initialize(DEBUGWEAPON);
-        Launch();
+    public bool IsDestroyed 
+    { 
+        get => isDestroyed; 
+        set => isDestroyed = value; 
+    }
+    public event System.Action<IInteraction> OnDestroyed;
+    void OnDestroy()
+    {
+        interactionDisplayer.Stop();
+        OnDestroyed?.Invoke(this);
+        IsDestroyed = true;
     }
     public void Initialize(Weapon weapon)
     {
         weaponSlotInfo = new WeaponSlot(weapon);
-        render.sprite = weapon.Sprite;
+        graphic.sprite = weapon.Sprite;
         interactionDisplayer.LabelText = $"{weapon.WeaponName}";
-        interactionDisplayer.CanvasPosition = render.bounds.center;
+        interactionDisplayer.CanvasPosition = graphic.bounds.center;
     }
     public void Interact(CR cr)
     {
-        var swapped = cr.Shooter.ChangeWeapon(weaponSlotInfo);
-        if (swapped == null)
+        var swapped = cr.Shooter.GainWeapon(weaponSlotInfo);
+        if (swapped?.Weapon == null)
         {
             Destroy(gameObject);
             return;
         }
         weaponSlotInfo = swapped;
-        render.sprite = weaponSlotInfo.Weapon.Sprite;
+        graphic.sprite = weaponSlotInfo.Weapon.Sprite;
         interactionDisplayer.LabelText = $"{weaponSlotInfo.Weapon.WeaponName}";
-        interactionDisplayer.CanvasPosition = render.bounds.center;
+        interactionDisplayer.CanvasPosition = graphic.bounds.center;
+
+        transform.position = cr.transform.position;
 
         Launch(power: 1.2f, duration: 0.4f);
     }

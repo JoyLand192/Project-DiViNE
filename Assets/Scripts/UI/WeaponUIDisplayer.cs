@@ -44,10 +44,18 @@ public class WeaponUIDisplayer : MonoBehaviour
     void UpdateMagazine(WeaponSlot weaponSlot)
     {
         magazineBar.DOKill(true);
-        magazineBar.DOFillAmount((float)weaponSlot.AmmoLeft / weaponSlot.Weapon.AmmoCount, 0.16f).SetEase(Ease.OutExpo);
-        ammoLeftText.text = $"{weaponSlot.AmmoLeft}";
-        magazineLeftText.text = $"{weaponSlot.MagazineLeft}";
+        magazineBar.DOFillAmount(   
+            weaponSlot?.Weapon == null ? 0 : (float)weaponSlot.AmmoLeft / weaponSlot.Weapon.AmmoCount,
+            0.16f)
+            .SetEase(Ease.OutExpo);
+        ammoLeftText.text = $"{weaponSlot?.AmmoLeft ?? 0}";
+        magazineLeftText.text = $"{weaponSlot?.MagazineLeft ?? 0}";
 
+        if (weaponSlot?.Weapon == null)
+        {
+            foreach (var line in magazineLines) line.gameObject.SetActive(false);
+            return;
+        }
         for (int i = 0; i < weaponSlot.Weapon.AmmoCount; i++)
         {
             if (i >= magazineLines.Count)
@@ -122,8 +130,8 @@ public class WeaponUIDisplayer : MonoBehaviour
     {
         for (int i = 0; i < weapons.Length && i < weaponSlots.Count; i++)
         {
-            weaponSlots[i].gameObject.SetActive(weapons[i] != null);
-            if (weapons[i] != null) weaponSlots[i].sprite = weapons[i].Weapon.Sprite;
+            weaponSlots[i].gameObject.SetActive(weapons[i]?.Weapon != null);
+            if (weapons[i]?.Weapon != null) weaponSlots[i].sprite = weapons[i].Weapon.Sprite;
         }
     }
 }
