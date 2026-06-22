@@ -13,11 +13,13 @@ public class WeaponSlot
     public int AmmoLeft;
     public int MagazineLeft;
     public bool Droppable;
-    public WeaponSlot(Weapon weapon, bool droppable = true)
+    public bool IsEmpty;
+    public WeaponSlot(Weapon weapon, bool droppable = true, bool isEmpty = false)
     {
         Weapon = weapon;
-        AmmoLeft = weapon == null ? default : weapon.AmmoCount;
-        MagazineLeft = weapon == null ? default : weapon.MagazineCount;
+        IsEmpty = isEmpty;
+        AmmoLeft = IsEmpty ? default : weapon.AmmoCount;
+        MagazineLeft = IsEmpty ? default : weapon.MagazineCount;
         Droppable = droppable;
     }
 }
@@ -38,13 +40,13 @@ public class CRShooter : MonoBehaviour, IShooter
     [SerializeField] protected float weaponDistanceScale = 0.18f;
     [SerializeField] protected float timer = 0;
     WeaponSlot defaultSlot;
-    public Weapon CurrentWeapon => CurrentWeaponSlot?.Weapon;
+    public Weapon CurrentWeapon => CurrentWeaponSlot.Weapon;
     public WeaponSlot CurrentWeaponSlot
     {
         get
         {
             if (currentWeaponIndex >= weapons.Length || currentWeaponIndex < 0) return null;
-            if (weapons.FirstOrDefault(p => p?.Weapon != null) == null) return defaultSlot;
+            if (weapons.FirstOrDefault(p => !p.IsEmpty) == null) return defaultSlot;
             return weapons[currentWeaponIndex];
         }
         set
@@ -54,6 +56,8 @@ public class CRShooter : MonoBehaviour, IShooter
 
             if (value == null)
             {
+                CurrentWeaponSlot = new WeaponSlot(defaultMeleeWeapon, false, true);
+
                 weaponUIDisplay.UpdateWeaponImage(weapons);
                 OnWeaponChanged?.Invoke(CurrentWeaponSlot);
                 return;
@@ -87,7 +91,7 @@ public class CRShooter : MonoBehaviour, IShooter
     void Awake()
     {
         cam = GetComponent<Camera>();
-        defaultSlot = new(defaultMeleeWeapon, false);
+        defaultSlot = new(defaultMeleeWeapon, false, true);
 
         for (int i = 0; i < weapons.Length; i++) weapons[i] = new WeaponSlot(DEBUGWeapons[i]);
 
@@ -155,7 +159,7 @@ public class CRShooter : MonoBehaviour, IShooter
         var throwingWeapon = CurrentWeaponSlot;
         CurrentWeaponSlot = null;
 
-        var nextWeapon = weapons.FirstOrDefault(p => p?.Weapon != null);
+        var nextWeapon = weapons.FirstOrDefault(p => !p.IsEmpty);
         if (nextWeapon != null) ChangeWeaponSlot(weapons.ToList().IndexOf(nextWeapon));
         else
         {
@@ -202,7 +206,7 @@ public class CRShooter : MonoBehaviour, IShooter
 
         currentWeaponIndex = index;
 
-        if (CurrentWeaponSlot?.Weapon == null)
+        if (CurrentWeaponSlot.IsEmpty)
         {
             weaponGraphic.gameObject.SetActive(false);
             weaponUIDisplay.SetCurrentSlot(index);
@@ -227,7 +231,7 @@ public class CRShooter : MonoBehaviour, IShooter
     }
     public WeaponSlot GainWeapon(WeaponSlot slot)
     {
-        var currentEmptySlot = weapons.FirstOrDefault(p => p?.Weapon == null || p.Weapon == defaultMeleeWeapon);
+        var currentEmptySlot = weapons.FirstOrDefault(p => p.IsEmpty);
         if (currentEmptySlot != null)
         {
             var index = weapons.ToList().IndexOf(currentEmptySlot);

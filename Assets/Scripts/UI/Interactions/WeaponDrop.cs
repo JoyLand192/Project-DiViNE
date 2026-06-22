@@ -59,6 +59,8 @@ public class WeaponDrop : MonoBehaviour, IInteraction, ILaunchable
     }
     public void Interact(CR cr)
     {
+        currentLaunchTween.Kill();
+
         var swapped = cr.Shooter.GainWeapon(weaponSlotInfo);
         if (swapped?.Weapon == null)
         {

@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class CRInteractionManager : MonoBehaviour
 {
-    const float interactionCooldown = 0.25f;
+    const float interactionCooldown = 0.125f;
     const KeyCode interactionKey = KeyCode.E;
     [SerializeField] CollisionDetector collisionDetector;
     [SerializeField] Transform navigator;

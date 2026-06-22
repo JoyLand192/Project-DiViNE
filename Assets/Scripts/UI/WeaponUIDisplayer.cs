@@ -130,8 +130,8 @@ public class WeaponUIDisplayer : MonoBehaviour
     {
         for (int i = 0; i < weapons.Length && i < weaponSlots.Count; i++)
         {
-            weaponSlots[i].gameObject.SetActive(weapons[i]?.Weapon != null);
-            if (weapons[i]?.Weapon != null) weaponSlots[i].sprite = weapons[i].Weapon.Sprite;
+            weaponSlots[i].gameObject.SetActive(!weapons[i].IsEmpty);
+            if (!weapons[i].IsEmpty) weaponSlots[i].sprite = weapons[i].Weapon.Sprite;
         }
     }
 }
